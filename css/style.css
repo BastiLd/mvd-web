@@ -13,7 +13,6 @@
   --bg-mid: #0b0705;      /* tiefste Stelle in der Mitte */
   --bg-bottom: #1c1108;   /* kurz vor dem Footer, wird wieder wärmer */
 
-  --sand-top: #c3803c;    /* gemessene Oberkante des Footerbilds */
 
   --color-red-glow: #ff5a42;
   --color-orange: #ff8c1a;
@@ -179,22 +178,33 @@ p { line-height: 1.7; margin: 0 0 1em; }
    Inhalt – dunkle Zone zwischen den beiden Bildern
    ========================================================================== */
 
-main {
-  position: relative;
-  padding: 70px 20px 120px;
+/* Nachthimmel als fixierte Ebene hinter dem Textbereich. Fixiert statt als
+   Hintergrund von main, weil das Bild sonst über die volle Seitenhöhe
+   hochskaliert würde und die Sterne verwaschen. So bleibt es scharf und
+   der Text scrollt sanft darüber hinweg. */
+.night-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
   background-color: var(--bg-mid);
-  /* Der Verlauf liegt über einem optionalen Nachtbild. Fehlt die Datei,
-     bleibt einfach die Hintergrundfarbe stehen. */
-  background-image:
-    linear-gradient(to bottom,
-        var(--bg-top) 0%,
-        rgba(11, 7, 5, 0.88) 18%,
-        rgba(11, 7, 5, 0.88) 80%,
-        var(--bg-bottom) 100%),
-    url("../assets/images/middle-night.jpg");
-  background-size: 100% 100%, cover;
-  background-position: center, center;
-  background-repeat: no-repeat, no-repeat;
+  background-image: url("../assets/images/middle-night.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Header und Footer sind deckend und verdecken die Ebene von selbst. */
+.hero, main, .site-footer { position: relative; z-index: 1; }
+
+main {
+  padding: 70px 20px 120px;
+  /* Halbtransparent, damit der Sternenhimmel durchscheint – oben und unten
+     deckend, damit die Übergänge zu Header und Footer sauber bleiben. */
+  background-image: linear-gradient(to bottom,
+      var(--bg-top) 0%,
+      rgba(9, 8, 14, 0.78) 20%,
+      rgba(9, 8, 14, 0.78) 78%,
+      var(--bg-bottom) 100%);
 }
 
 .intro-text {
@@ -261,60 +271,99 @@ main {
    Footer – Sand mit den eingeritzten Begriffen
    ========================================================================== */
 
-/* Übergangsband: führt von der dunklen Mitte in den Sandton des Footerbilds.
-   Liegt bewusst ÜBER dem Bild statt darauf, damit die in den Sand
-   geschriebenen Wörter nicht überdeckt werden. */
-.footer-transition {
-  height: clamp(120px, 15vw, 200px);
-  background: linear-gradient(to bottom,
-      var(--bg-bottom) 0%,
-      #4a2c14 42%,
-      #8a5626 72%,
-      var(--sand-top) 100%);
-}
-
+/* Dünenlandschaft aus vier langsam driftenden Ebenen. Jede Ebene ist eine
+   nahtlos kachelnde SVG-Grafik; animiert wird die Hintergrundposition um
+   exakt eine Kachelbreite, dadurch springt nichts. */
 .site-footer {
   position: relative;
-  background-color: var(--sand-top);
-  background-image: url("../assets/images/footer-sand.jpg");
-  /* Seitenverhältnis des Bilds (1600x800), damit die Wörter im Sand nicht
-     angeschnitten oder verzerrt werden. */
-  aspect-ratio: 2 / 1;
-  max-height: 74vh;
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
+  min-height: 390px;
+  padding: 0 20px 30px;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding: 0 20px 30px;
+  overflow: hidden;
+  background: linear-gradient(to bottom,
+      var(--bg-bottom) 0%,
+      #2a1a0d 55%,
+      #3b2613 100%);
 }
 
-/* Kurze Kaschierung der Bildoberkante, damit dort keine harte Linie steht. */
+/* Warmer Lichtschein hinter den Dünenkämmen – wie eine Sonne knapp darunter. */
 .site-footer::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 170px;
+  background: radial-gradient(ellipse at center,
+      rgba(224, 138, 43, 0.35) 0%,
+      rgba(160, 80, 25, 0.14) 45%,
+      transparent 72%);
+  filter: blur(14px);
+  pointer-events: none;
+}
+
+.dunes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Die Ebene ist eine Kachelbreite breiter als der Footer und wandert um genau
+   eine Kachel. Weil sich der Hintergrund exakt in diesem Takt wiederholt, ist
+   der Sprung am Ende unsichtbar. Bewegt wird per transform statt per
+   background-position – das läuft auf der GPU und spart Repaints. */
+.dune {
+  --tile: 1200px;
+  --tile-h: 300px;
+  position: absolute;
+  left: 0;
+  width: calc(100% + var(--tile));
+  height: var(--tile-h);
+  background-repeat: repeat-x;
+  background-position: 0 bottom;
+  background-size: var(--tile) var(--tile-h);
+  animation: dune-drift var(--speed, 90s) linear infinite;
+  will-change: transform;
+}
+
+/* Hintere Reihen stehen höher und driften langsamer – dadurch entsteht
+   Tiefe, statt dass alle Reihen aufeinanderliegen. */
+.dune--1 { background-image: url("../assets/images/dune-1.svg"); --speed: 200s; bottom: 96px; }
+.dune--2 { background-image: url("../assets/images/dune-2.svg"); --speed: 150s; bottom: 62px; }
+.dune--3 { background-image: url("../assets/images/dune-3.svg"); --speed: 105s; bottom: 30px; }
+.dune--4 { background-image: url("../assets/images/dune-4.svg"); --speed:  72s; bottom: 0; }
+
+/* Gegenläufig, damit die Ebenen nicht im Gleichschritt wandern. */
+.dune--2, .dune--4 { animation-direction: reverse; }
+
+@keyframes dune-drift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-1 * var(--tile))); }
+}
+
+/* Verlängert den Sockel der vordersten Dünenreihe nach oben. Gleiche Farbe wie
+   dune-4, deshalb entsteht keine sichtbare Kante – es sorgt nur dafür, dass
+   der Text nie auf einem hellen Dünenkamm landet. */
+.site-footer::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  top: 0;
-  height: 16%;
-  background: linear-gradient(to bottom,
-      var(--sand-top) 0%,
-      rgba(195, 128, 60, 0) 100%);
+  bottom: 0;
+  height: var(--footer-base, 84px);
+  background: #5d4023;
+  z-index: 1;
   pointer-events: none;
 }
 
-/* Die Wörter im Sand sind Deko – anklickbar ist diese Leiste. Sie bekommt
-   einen weichen dunklen Träger, damit sie auf dem hellen Sand sicher lesbar
-   bleibt, egal welcher Bildausschnitt gerade dahinterliegt. */
+/* Der Text steht direkt auf der vordersten, dunklen Dünenreihe. */
 .footer-inner {
   position: relative;
   z-index: 2;
   text-align: center;
-  padding: 14px 26px 12px;
-  border-radius: 14px;
-  background: rgba(38, 21, 8, 0.55);
-  backdrop-filter: blur(3px);
 }
 
 .footer-links {
@@ -328,18 +377,20 @@ main {
 .footer-links a {
   text-decoration: none;
   font-weight: 700;
-  color: #ffd9a8;
+  color: #f6dcb4;
+  text-shadow: 0 1px 3px rgba(20, 10, 2, 0.6);
 }
 
 .footer-links a:hover {
-  color: #fff3e2;
+  color: #fff6e8;
   text-decoration: underline;
 }
 
 .copyright {
   font-size: 0.8rem;
   margin: 0;
-  color: #e8c8a4;
+  color: #d3b48c;
+  text-shadow: 0 1px 3px rgba(20, 10, 2, 0.6);
 }
 
 /* ==========================================================================
@@ -355,12 +406,20 @@ main {
   .hero::after { height: 40%; }
   main { padding: 50px 18px 90px; }
   .content-block, .intro-text { margin-bottom: 50px; }
-  /* Hochkant ist ein 2:1-Footer sehr flach – etwas mehr Höhe, dafür
-     beschnittener Sand. */
-  .site-footer { aspect-ratio: auto; min-height: 230px; }
+  /* Kleinere Kachel, sonst sieht man auf dem Handy nur einen Ausschnitt
+     einer einzigen Düne. */
+  .site-footer { min-height: 320px; --footer-base: 118px; }
+  .dune { --tile: 680px; --tile-h: 260px; }
+  .dune--1 { bottom: 78px; }
+  .dune--2 { bottom: 52px; }
+  .dune--3 { bottom: 26px; }
+  .site-footer::before { height: 200px; bottom: 130px; }
+  .footer-links { gap: 15px; }
+  .footer-links a { font-size: 0.92rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { transition: none; }
+  .dune { animation: none; }
 }
