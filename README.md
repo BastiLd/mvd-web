@@ -7,63 +7,89 @@ Website für MVD – Marvel Vereinigt Deutschland. Reines HTML/CSS/JS, kein Buil
 ```
 index.html
 css/
-  style.css        Basis-Layout + Standard-Modus (schwarz/rot, Scroll-Magie)
+  style.css        Basis-Layout, schwarzer Standard-Modus, Palast, Lava-Vorhang
   interactive.css  Überschreibungen für den interaktiven Modus (Sand/Blau/Rot)
 js/
-  main.js           Hamburger-Menü, Moduswechsel (localStorage), Reveal-on-Scroll
-  scroll-magic.js   Steuert die Orb-/Energie-Animation im Standard-Modus
+  veil.js           Vordergrund-Vorhang mit blubbernder Lava-Kante
+  main.js           Hamburger-Menü, Moduswechsel (localStorage), Text-Einblendung
 assets/images/
-  header-placeholder.svg   Platzhalter für den Strand-Header mit Helden-Schatten
-  footer-placeholder.svg   Platzhalter für den Sand-Footer mit Impressum/Kontakt/...
+  header-beach.png         ← hier dein ChatGPT-Header-Bild ablegen
+  footer-sand.png          ← hier dein ChatGPT-Footer-Bild ablegen
+  header-placeholder.svg   Platzhalter, greift solange das echte Bild fehlt
+  footer-placeholder.svg   dito
 ```
 
 ## Zwei Modi
 
-- **Standard** (Default): schwarz-roter Hintergrund, "Chaosmagie"-Scrolleffekt (Orbs/Energie lösen
-  sich beim Scrollen von oben nach unten auf), sonst nur Text.
-- **Interaktiv**: Sand-Header mit Helden-Schatten, Blau/Rot als Hauptfarben, Verlaufstext
-  Lila/Rosa → Dunkelblau, Sand-Footer mit eingebetteten Begriffen.
-- Umschalten über das Hamburger-Menü oben rechts (3 Striche) → "Zu interaktivem Modus wechseln".
-  Die Wahl wird im Browser gespeichert (`localStorage`).
+**Standard** (Default)
+- Hintergrund komplett schwarz, darin ein Palast aus abgerundeten Rechtecken
+  (Türme, Kuppeln, Zinnenmauer, Bogenfenster) in dunklem Rot – reines CSS.
+- Beim Laden ist der Bildschirm schwarz. Über 1,5 s fährt ein Vorhang nach unten;
+  seine gewölbte Kante ist mit roten Kreisen, Rechtecken und Dreiecken besetzt,
+  die wie Lava blubbern. Was die Kante passiert hat, wird sichtbar.
+- Danach steht die Kante bei 3/4 der Sichthöhe und wandert beim Scrollen langsam
+  weiter nach unten. Am Footer verdampft der Vorhang.
 
-## Platzhalterbilder ersetzen
+**Interaktiv**
+- Sand-Header mit den Schatten der fünf Helden, Blau/Rot als Hauptfarben,
+  Verlaufstext Rosa → Lila → Dunkelblau, Sand-Footer mit eingeritzten Begriffen.
 
-Sobald du die beiden Bilder mit ChatGPT erzeugt hast, einfach unter genau diesen Dateinamen
-in `assets/images/` ablegen (vorhandene Platzhalter überschreiben — PNG/JPG geht auch,
-dann in `css/interactive.css` die Dateiendung in den beiden `url(...)`-Pfaden anpassen):
+Umschalten über das orange Hamburger-Menü oben rechts. Die Wahl wird im Browser
+gespeichert (`localStorage`).
 
-- `header-placeholder.svg` → Header-Bild (Sand + 5 Helden-Schatten)
-- `footer-placeholder.svg` → Footer-Bild (Sand mit Impressum/Kontakt/Anmelden/Beitreten)
+## Bilder einsetzen
 
-### Prompt für das Header-Bild
+Die beiden ChatGPT-Bilder einfach unter **genau diesen Namen** in `assets/images/`
+ablegen – die Platzhalter werden dann automatisch überdeckt:
 
-> Strandszene von oben/schräg fotografiert, warmes Sandlicht, im Sand liegen lange, weiche
-> Schlagschatten von fünf stehenden Figuren nebeneinander, erkennbar an Silhouette und Pose
-> (nicht an Details) — Iron-Man-Haltung, Spider-Man-Haltung, Black-Panther-Haltung,
-> Moon-Knight-Haltung, Deadpool-Haltung; keine Gesichter, keine Logos, nur der Schattenwurf im
-> Sand; ruhiger, minimalistischer, filmischer Look; oben in der Bildmitte bleibt Platz frei für
-> einen Titel-Schriftzug; Breitbild-Format (16:9).
+- `header-beach.png` – Strand mit den fünf Helden-Schatten
+- `footer-sand.png` – Sand mit den eingeritzten Begriffen
 
-### Prompt für das Footer-Bild
+Fehlt eine Datei, zeigt die Seite weiterhin den passenden SVG-Platzhalter. Es geht
+also nichts kaputt, wenn erst ein Bild fertig ist.
 
-> Nahaufnahme von feinem Sand mit sanftem seitlichem Streiflicht, in den Sand wie mit dem Finger
-> eingeritzt stehen verteilt die Wörter "Impressum", "Kontakt", "Anmelden", "Beitreten" und
-> "© MVD"; die Schrift wirkt organisch in den Sand geschrieben, nicht wie digitale Schrift; warme
-> Abendlicht-Stimmung; breites Panorama-Format.
+### Prompt für das Footer-Bild (funktioniert bereits)
+
+> Nahaufnahme von feinem Sand mit sanftem seitlichem Streiflicht, in den Sand wie
+> mit dem Finger eingeritzt stehen verteilt die Wörter "Impressum", "Kontakt",
+> "Anmelden", "Beitreten" und "© MVD"; die Schrift wirkt organisch in den Sand
+> geschrieben, nicht wie digitale Schrift; warme Abendlicht-Stimmung; breites
+> Panorama-Format.
+
+### Prompt für das Header-Bild (ohne Figurennamen)
+
+ChatGPT lehnt Prompts ab, in denen geschützte Figuren namentlich vorkommen. Dieser
+Prompt beschreibt nur die Posen und läuft dadurch durch:
+
+> Weitwinkel-Strandszene bei tief stehender Abendsonne, feiner heller Sand, Blick
+> leicht von oben. Fünf lange, weiche Schlagschatten fallen nebeneinander auf den
+> Sand – die Personen selbst sind NICHT im Bild, man sieht ausschließlich ihre
+> Schatten. Die fünf Silhouetten sind deutlich unterschiedlich: eine Gestalt steht
+> breitbeinig, die Arme leicht vom Körper abgespreizt; eine hockt geduckt und
+> stützt eine Hand vor sich auf den Boden; eine steht aufrecht mit verschränkten
+> Armen und einem knappen Umhang; eine steht mit weit ausgebreitetem, lang
+> fallendem Umhang; eine steht lässig mit den Händen in den Hüften und zwei
+> angedeuteten Griffen hinter den Schultern. Keine Gesichter, keine Logos, keine
+> Kostümdetails – nur schwarze Schattenformen im Sand. Ruhige, filmische Stimmung,
+> viel freier Sand oben in der Bildmitte für einen Titel-Schriftzug.
+> Breitbild-Format 16:9.
+
+Falls es damit immer noch klemmt, hilft meist der Zusatz *"generische Heldenposen,
+keine bestehenden Comicfiguren"*.
 
 ## Hinweis zu den Marvel-Figuren
 
-Die Silhouetten von Iron Man, Spider-Man, Black Panther, Moon Knight und Deadpool sind
-urheber-/markenrechtlich geschützte Marvel-Figuren. Als nicht-kommerzielles Fan-Projekt ist das
-Risiko gering, im Footer steht daher ein kurzer Disclaimer ("Fan-Projekt, keine Verbindung zu
-Marvel oder Disney"). Bei Bedarf anpassen oder entfernen.
+Die Silhouetten sind an geschützte Marvel-Figuren angelehnt. Als
+nicht-kommerzielles Fan-Projekt ist das Risiko gering; im Footer steht deshalb ein
+kurzer Disclaimer („Fan-Projekt, keine Verbindung zu Marvel oder Disney"). Bei
+Bedarf anpassen.
 
 ## Lokal ansehen
 
-Einfach `index.html` im Browser öffnen — keine Installation nötig.
+`index.html` im Browser öffnen – keine Installation nötig.
 
 ## Deployment (GitHub Pages)
 
-Das Repository wird unter dem GitHub-Account `BastiLd` gehostet, Pages-Quelle ist
-`main`-Branch / `/ (root)`. Nach jedem Push auf `main` aktualisiert sich die Seite automatisch
-unter der im Repo hinterlegten GitHub-Pages-URL (siehe "About" im Repo bzw. Pages-Einstellungen).
+Repository: `BastiLd/mvd-web`, Pages-Quelle `main` / `/ (root)`.
+Nach jedem Push auf `main` aktualisiert sich <https://bastild.github.io/mvd-web/>
+automatisch (dauert nach dem Push ca. 1 Minute).

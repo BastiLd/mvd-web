@@ -15,6 +15,9 @@
           ? "Zu Standard-Modus wechseln"
           : "Zu interaktivem Modus wechseln";
     }
+    if (window.MVDVeil) {
+      window.MVDVeil.refresh();
+    }
   }
 
   function initMode() {
@@ -22,7 +25,7 @@
     try {
       saved = localStorage.getItem(STORAGE_KEY);
     } catch (e) {
-      /* localStorage nicht verfügbar (z.B. privater Modus) - einfach ignorieren */
+      /* localStorage nicht verfügbar (z.B. privater Modus) – ignorieren */
     }
     applyMode(saved === "interactive" ? "interactive" : "standard");
   }
@@ -34,18 +37,20 @@
     try {
       localStorage.setItem(STORAGE_KEY, next);
     } catch (e) {
-      /* ignorieren, Modus gilt dann nur für diese Seitenansicht */
+      /* ignorieren, der Modus gilt dann nur für diese Seitenansicht */
     }
   }
 
   function closeMenu() {
     menu.hidden = true;
     hamburger.setAttribute("aria-expanded", "false");
+    hamburger.setAttribute("aria-label", "Menü öffnen");
   }
 
   function openMenu() {
     menu.hidden = false;
     hamburger.setAttribute("aria-expanded", "true");
+    hamburger.setAttribute("aria-label", "Menü schließen");
   }
 
   hamburger.addEventListener("click", function () {
@@ -57,7 +62,13 @@
   });
 
   document.addEventListener("click", function (event) {
-    if (!menu.hidden && !menu.contains(event.target) && event.target !== hamburger) {
+    if (!menu.hidden && !menu.contains(event.target) && !hamburger.contains(event.target)) {
+      closeMenu();
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && !menu.hidden) {
       closeMenu();
     }
   });
@@ -71,20 +82,30 @@
 
   // Platzhalter-Links (Anmelden, Beitreten, Bewerben, Kontakt, Impressum ...)
   // tun aktuell bewusst nichts.
-  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+  Array.prototype.forEach.call(document.querySelectorAll('a[href="#"]'), function (link) {
     link.addEventListener("click", function (event) {
       event.preventDefault();
     });
   });
 
+  function showAll(targets) {
+    Array.prototype.forEach.call(targets, function (el) {
+      el.classList.add("is-visible");
+    });
+  }
+
   function initReveal() {
     var targets = document.querySelectorAll(".reveal");
     if (!("IntersectionObserver" in window)) {
-      targets.forEach(function (el) {
-        el.classList.add("is-visible");
-      });
+      showAll(targets);
       return;
     }
+
+    /* Sicherheitsnetz: Der Text darf niemals dauerhaft unsichtbar bleiben,
+       falls der Observer aus irgendeinem Grund nicht auslöst. */
+    window.setTimeout(function () {
+      showAll(targets);
+    }, 4000);
     var observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
@@ -94,13 +115,15 @@
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.12 }
     );
-    targets.forEach(function (el) {
+    Array.prototype.forEach.call(targets, function (el) {
       observer.observe(el);
     });
   }
 
   initMode();
-  initReveal();
+  // Kurz warten, damit der Text erst erscheint, während der Vorhang darüber
+  // hinwegfährt – nicht schon davor.
+  window.setTimeout(initReveal, 500);
 })();

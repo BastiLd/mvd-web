@@ -26,9 +26,10 @@ body[data-mode="interactive"] .header-bg {
   display: block;
   position: absolute;
   inset: 0;
-  background-image: url("../assets/images/header-placeholder.svg");
-  background-size: cover;
-  background-position: center;
+  background-image: url("../assets/images/header-beach.png"),
+                    url("../assets/images/header-placeholder.svg");
+  background-size: cover, cover;
+  background-position: center, center;
   z-index: 1;
 }
 
@@ -108,10 +109,10 @@ body[data-mode="interactive"] .footer-stones {
 
 body[data-mode="interactive"] .footer-sand {
   background-image:
-    linear-gradient(to bottom, rgba(216, 179, 130, 0.35), rgba(168, 120, 63, 0.55)),
+    url("../assets/images/footer-sand.png"),
     url("../assets/images/footer-placeholder.svg");
-  background-size: cover;
-  background-position: center;
+  background-size: cover, cover;
+  background-position: center, center;
   min-height: 220px;
   display: flex;
   flex-direction: column;
