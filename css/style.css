@@ -1,0 +1,377 @@
+/* ==========================================================================
+   MVD Web – Basis-Styles + Standard-Modus (Default)
+   ========================================================================== */
+
+:root {
+  --color-black: #05000a;
+  --color-red: #b3131f;
+  --color-red-bright: #ff3b3b;
+  --color-red-glow: #ff5252;
+  --color-blue: #1b3a8a;
+  --color-blue-dark: #0a1233;
+  --color-purple: #8a4fff;
+  --color-pink: #ff6fb0;
+  --color-orange: #ff9d2f;
+  --color-yellow: #ffd23f;
+  --color-sand: #d8b382;
+  --color-sand-dark: #a8783f;
+  --color-stone: #e8e6df;
+  --color-text: #f2e9e9;
+  --color-text-muted: #cbb9b9;
+
+  --font-base: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --content-max-width: 680px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-base);
+  color: var(--color-text);
+  background: var(--color-black);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+  margin: 0 0 0.6em;
+}
+
+p {
+  line-height: 1.7;
+  margin: 0 0 1em;
+}
+
+/* ---------- Standard-Modus Hintergrund: Schwarz -> Rot ---------- */
+
+body[data-mode="standard"] {
+  background: linear-gradient(
+    to bottom,
+    var(--color-black) 0%,
+    #1a0006 35%,
+    #3a000c 70%,
+    var(--color-black) 100%
+  );
+}
+
+/* ---------- Hamburger-Menü (in beiden Modi vorhanden) ---------- */
+
+.hamburger {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--color-text);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.hamburger[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.menu {
+  position: fixed;
+  top: 72px;
+  right: 20px;
+  z-index: 49;
+  background: rgba(10, 8, 12, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px;
+  min-width: 220px;
+  backdrop-filter: blur(6px);
+}
+
+.menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu li + li {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.menu-link {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  color: var(--color-text);
+  font-size: 0.95rem;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.menu-link:hover {
+  color: var(--color-red-glow);
+}
+
+.mode-switch-btn {
+  font-weight: 600;
+  color: var(--color-orange);
+}
+
+/* ---------- Scroll-Magie-Layer (nur Standard-Modus sichtbar) ---------- */
+
+#magic-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+  will-change: opacity;
+}
+
+#magic-layer .energy-core {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  width: 340px;
+  height: 340px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, #ffffff 0%, var(--color-red-bright) 35%, var(--color-red) 60%, transparent 72%);
+  filter: blur(18px);
+  will-change: transform, opacity;
+}
+
+#magic-layer .orb {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-red-glow), var(--color-red) 55%, transparent 75%);
+  filter: blur(6px);
+  opacity: 0.85;
+  will-change: transform, opacity;
+}
+
+.orb-1 { top: 4%;  left: 12%; width: 70px;  height: 70px; }
+.orb-2 { top: 8%;  left: 78%; width: 90px;  height: 90px; }
+.orb-3 { top: 2%;  left: 45%; width: 50px;  height: 50px; }
+.orb-4 { top: 14%; left: 25%; width: 55px;  height: 55px; }
+.orb-5 { top: 10%; left: 60%; width: 65px;  height: 65px; }
+.orb-6 { top: 18%; left: 88%; width: 40px;  height: 40px; }
+
+#magic-layer .smoke {
+  position: absolute;
+  top: -10%;
+  width: 60%;
+  height: 40%;
+  background: radial-gradient(ellipse at center, rgba(179, 19, 31, 0.55), transparent 70%);
+  filter: blur(30px);
+  will-change: transform, opacity;
+}
+
+.smoke-1 { left: -10%; }
+.smoke-2 { left: 50%; }
+
+/* ---------- Header ---------- */
+
+.site-header {
+  position: relative;
+  padding: 140px 20px 60px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.header-bg {
+  display: none; /* nur im interaktiven Modus sichtbar, siehe interactive.css */
+}
+
+.site-title {
+  position: relative;
+  z-index: 2;
+  font-size: clamp(2.4rem, 8vw, 4rem);
+  letter-spacing: 0.05em;
+  color: var(--color-text);
+}
+
+.site-title .subtitle {
+  display: block;
+  font-size: 0.32em;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--color-text-muted);
+  margin-top: 0.4em;
+}
+
+/* ---------- Content ---------- */
+
+main {
+  position: relative;
+  z-index: 2;
+  padding: 0 20px 80px;
+}
+
+.intro-text {
+  max-width: var(--content-max-width);
+  margin: 0 auto 60px;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.gradient-text {
+  color: var(--color-text);
+}
+
+.content-block {
+  max-width: var(--content-max-width);
+  margin: 0 auto 70px;
+}
+
+.content-block h2 {
+  font-size: 1.5rem;
+  color: var(--color-red-glow);
+}
+
+.lead-out {
+  font-style: italic;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-top: 1.5em;
+}
+
+/* ---------- Team ---------- */
+
+.team-section {
+  max-width: 900px;
+  margin: 0 auto 60px;
+}
+
+.team-section h2 {
+  text-align: center;
+  font-size: 1.6rem;
+  margin-bottom: 1em;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.team-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+
+.team-card h3 {
+  font-size: 1.1rem;
+  color: var(--color-red-glow);
+}
+
+.team-card p {
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---------- Reveal-on-scroll ---------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  position: relative;
+  z-index: 2;
+}
+
+.footer-stones {
+  height: 26px;
+  background: linear-gradient(to bottom, var(--color-stone), #cfcac0);
+}
+
+.footer-sand {
+  background: linear-gradient(to bottom, var(--color-sand), var(--color-sand-dark));
+  padding: 40px 20px 30px;
+  text-align: center;
+  color: #2c1c0a;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 22px;
+  margin-bottom: 16px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #2c1c0a;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.copyright {
+  font-size: 0.82rem;
+  opacity: 0.85;
+  margin: 0;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+  .site-header {
+    padding: 110px 16px 40px;
+  }
+  .content-block, .intro-text {
+    margin-bottom: 50px;
+  }
+}

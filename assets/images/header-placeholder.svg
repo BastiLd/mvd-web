@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sandSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8c99a"/>
+      <stop offset="55%" stop-color="#d8b382"/>
+      <stop offset="100%" stop-color="#a8783f"/>
+    </linearGradient>
+    <filter id="softBlur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="900" fill="url(#sandSky)"/>
+
+  <!-- Platzhalter-Schlagschatten der 5 Helden -->
+  <g fill="#3a2712" opacity="0.35" filter="url(#softBlur)">
+    <ellipse cx="260" cy="760" rx="70" ry="260"/>
+    <ellipse cx="580" cy="780" rx="65" ry="240"/>
+    <ellipse cx="900" cy="790" rx="75" ry="250"/>
+    <ellipse cx="1150" cy="775" rx="60" ry="235"/>
+    <ellipse cx="1380" cy="760" rx="68" ry="255"/>
+  </g>
+
+  <!-- Textur-Andeutung -->
+  <g fill="#ffffff" opacity="0.05">
+    <circle cx="200" cy="200" r="180"/>
+    <circle cx="1300" cy="150" r="220"/>
+    <circle cx="800" cy="100" r="260"/>
+  </g>
+
+  <text x="800" y="850" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif"
+        font-size="22" fill="#3a2712" opacity="0.45">
+    Platzhalter — wird durch dein ChatGPT-Bild ersetzt (Prompt siehe README.md)
+  </text>
+</svg>

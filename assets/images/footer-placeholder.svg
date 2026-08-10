@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sandFooter" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e0bd8a"/>
+      <stop offset="100%" stop-color="#a8783f"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="500" fill="url(#sandFooter)"/>
+
+  <g fill="#5a3d1c" opacity="0.06">
+    <circle cx="150" cy="120" r="140"/>
+    <circle cx="1450" cy="380" r="180"/>
+    <circle cx="700" cy="450" r="200"/>
+  </g>
+
+  <g fill="#3a2712" opacity="0.55" font-family="'Segoe Print','Bradley Hand',cursive" font-size="46">
+    <text x="180" y="160" transform="rotate(-4 180 160)">Impressum</text>
+    <text x="560" y="240" transform="rotate(3 560 240)">Kontakt</text>
+    <text x="920" y="160" transform="rotate(-2 920 160)">Anmelden</text>
+    <text x="1260" y="260" transform="rotate(4 1260 260)">Beitreten</text>
+    <text x="700" y="380" transform="rotate(-1 700 380)" font-size="34">© MVD</text>
+  </g>
+
+  <text x="800" y="470" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif"
+        font-size="18" fill="#3a2712" opacity="0.4">
+    Platzhalter — wird durch dein ChatGPT-Bild ersetzt (Prompt siehe README.md)
+  </text>
+</svg>
