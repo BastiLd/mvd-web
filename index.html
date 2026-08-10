@@ -4,43 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MVD – Marvel Vereinigt Deutschland</title>
+<link rel="preload" as="image" href="assets/images/header-beach.jpg">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/interactive.css">
 <script>
-  /* Setzt die Startlage für die Intro-Animation, bevor das erste Bild gezeichnet
-     wird. Läuft kein JavaScript, bleibt die Klasse aus – der Vorhang steht dann
-     in Ruhelage und die Seite ist ganz normal lesbar. */
-  document.documentElement.classList.add("veil-boot");
+  /* Markiert, dass JavaScript läuft. Nur dann wird Text zum Einblenden
+     vorbereitet – ohne JS ist die Seite ganz normal lesbar. */
+  document.documentElement.classList.add("js");
 </script>
 </head>
-<body data-mode="standard">
+<body>
 
-  <!-- ================= Hintergrund: Palast aus Rechtecken (nur Standard-Modus) ========= -->
-  <div class="backdrop" aria-hidden="true">
-    <div class="palace">
-      <div class="p-tower p-tower--outer p-tower--l2"><span class="p-dome"></span></div>
-      <div class="p-tower p-tower--mid   p-tower--l1"><span class="p-dome"></span></div>
-      <div class="p-tower p-tower--main"><span class="p-dome"></span><span class="p-spire"></span></div>
-      <div class="p-tower p-tower--mid   p-tower--r1"><span class="p-dome"></span></div>
-      <div class="p-tower p-tower--outer p-tower--r2"><span class="p-dome"></span></div>
-      <div class="p-wall"></div>
-      <div class="p-wall p-wall--front"></div>
-      <div class="p-gate"></div>
-      <div class="p-glow"></div>
-    </div>
-  </div>
-
-  <!-- ================= Vordergrund-Vorhang mit Lava-Kante ============================= -->
-  <div id="veil" class="veil" aria-hidden="true">
-    <div class="veil__dome">
-      <svg class="veil__curve" viewBox="0 0 1200 260" preserveAspectRatio="none" focusable="false">
-        <path d="M0,0 C340,347 860,347 1200,0 L1200,262 L0,262 Z"></path>
-      </svg>
-      <div class="veil__lava"></div>
-    </div>
-  </div>
-
-  <!-- ================= Menü ========================================================== -->
   <button id="menu-toggle" class="hamburger" aria-label="Menü öffnen" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
@@ -51,19 +24,20 @@
       <li><a href="#" class="menu-link">Beitreten</a></li>
       <li><a href="#" class="menu-link">Bewerben</a></li>
       <li><a href="#" class="menu-link">Kontakt</a></li>
-      <li><button id="mode-switch" class="menu-link mode-switch-btn" type="button">Zu interaktivem Modus wechseln</button></li>
     </ul>
   </nav>
 
-  <header class="site-header">
-    <div class="header-bg" aria-hidden="true"></div>
-    <h1 class="site-title">MVD <span class="subtitle">(Marvel vereinigt Deutschland)</span></h1>
+  <header class="hero">
+    <div class="hero__inner">
+      <h1 class="hero__title">MVD</h1>
+      <p class="hero__subtitle">(Marvel vereinigt Deutschland)</p>
+    </div>
   </header>
 
   <main>
 
     <section class="intro-text reveal">
-      <p class="gradient-text">Ein Zusammenschluss deutscher Marvel-Creator – eigenständig, aber gemeinsam stärker.</p>
+      <p>Ein Zusammenschluss deutscher Marvel-Creator – eigenständig, aber gemeinsam stärker.</p>
     </section>
 
     <section class="content-block reveal">
@@ -140,9 +114,10 @@
 
   </main>
 
-  <footer class="site-footer" id="site-footer">
-    <div class="footer-stones" aria-hidden="true"></div>
-    <div class="footer-sand">
+  <div class="footer-transition" aria-hidden="true"></div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
       <div class="footer-links">
         <a href="#">Impressum</a>
         <a href="#">Kontakt</a>
@@ -153,7 +128,6 @@
     </div>
   </footer>
 
-  <script src="js/veil.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

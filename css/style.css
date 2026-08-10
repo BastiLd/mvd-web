@@ -1,48 +1,42 @@
 /* ==========================================================================
-   MVD Web – Basis-Styles + Standard-Modus (schwarz, Palast, Lava-Vorhang)
+   MVD Web – Bildbasiertes Layout
+   Aufbau von oben nach unten: Strand-Header  ->  dunkle Nacht  ->  Sand-Footer.
+   Die Übergangsfarben sind aus den Bildrändern gemessen, damit die Kanten der
+   Bilder nicht sichtbar werden:
+     Header unten  #67573E
+     Footer oben   #C3803C
    ========================================================================== */
 
 :root {
-  --color-black: #000000;
-  --color-red: #b3131f;
-  --color-red-bright: #ff2a1f;
+  /* Hintergrundverlauf zwischen den beiden Bildern */
+  --bg-top: #1a120b;      /* direkt unter dem Header, warm-dunkel */
+  --bg-mid: #0b0705;      /* tiefste Stelle in der Mitte */
+  --bg-bottom: #1c1108;   /* kurz vor dem Footer, wird wieder wärmer */
+
+  --sand-top: #c3803c;    /* gemessene Oberkante des Footerbilds */
+
   --color-red-glow: #ff5a42;
-  --color-red-deep: #4a060f;
-  --color-blue: #1b3a8a;
-  --color-blue-dark: #0a1233;
-  --color-purple: #8a4fff;
-  --color-pink: #ff6fb0;
   --color-orange: #ff8c1a;
   --color-orange-light: #ffb43c;
-  --color-yellow: #ffd23f;
-  --color-sand: #d8b382;
-  --color-sand-dark: #a8783f;
-  --color-stone: #e8e6df;
-  --color-text: #f2e9e9;
-  --color-text-muted: #c9b6b6;
+  --color-text: #f4ece6;
+  --color-text-muted: #c8b6a8;
 
   --font-base: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --content-max-width: 680px;
-
-  /* Höhe der Lava-Kuppel (die gewölbte Kante des Vorhangs) */
-  --dome-h: clamp(110px, 16vh, 210px);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html {
   scroll-behavior: smooth;
-  background: var(--color-black);
+  background: var(--bg-mid);
 }
 
 body {
   margin: 0;
   font-family: var(--font-base);
   color: var(--color-text);
-  background: var(--color-black);
-  min-height: 100vh;
+  background: var(--bg-mid);
   overflow-x: hidden;
 }
 
@@ -52,286 +46,74 @@ h1, h2, h3 { font-weight: 700; margin: 0 0 0.6em; }
 p { line-height: 1.7; margin: 0 0 1em; }
 
 /* ==========================================================================
-   Hintergrund – Palast aus abgerundeten Rechtecken (3D-Andeutung)
+   Header – Strand mit den fünf Schatten
    ========================================================================== */
 
-.backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-  background: radial-gradient(ellipse 120% 70% at 50% 100%, #1a0308 0%, #000 65%);
+.hero {
+  position: relative;
+  min-height: 88vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16vh 20px 0;
+  background-color: #c4a16f;
+  background-image: url("../assets/images/header-beach.jpg");
+  background-size: cover;
+  /* Bild ist quadratisch: dieser Ausschnitt zeigt Sand + Schatten. */
+  background-position: center 72%;
+  background-repeat: no-repeat;
 }
 
-.palace {
-  position: absolute;
-  left: 50%;
-  bottom: 17vh;
-  transform: translateX(-50%);
-  width: min(980px, 94vw);
-  height: 42vh;
-  min-height: 280px;
-  opacity: 0.42;
-}
-
-/* Türme --------------------------------------------------------------- */
-
-.p-tower {
-  position: absolute;
-  bottom: 26%;
-  border-radius: 10px 10px 4px 4px;
-  /* Zylinder-Schattierung für den 3D-Eindruck */
-  background: linear-gradient(90deg,
-      #2b040a 0%, #6d101c 30%, #a71a2c 52%, #5c0d17 76%, #1e0307 100%);
-  box-shadow: inset 0 -30px 50px rgba(0, 0, 0, 0.55),
-              0 0 40px rgba(167, 26, 44, 0.22);
-}
-
-/* Bogenfenster in jedem Turm */
-.p-tower::after {
+/* Weicher Auslauf nach unten in den Seitenhintergrund. Beginnt transparent
+   auf der gemessenen Bildrandfarbe und endet exakt auf --bg-top. */
+.hero::after {
   content: "";
   position: absolute;
-  left: 50%;
-  top: 26%;
-  transform: translateX(-50%);
-  width: 30%;
-  height: 15%;
-  border-radius: 46% 46% 4px 4px / 66% 66% 4px 4px;
-  background: linear-gradient(180deg, #ff7a45, #7d1220);
-  box-shadow: 0 0 14px rgba(255, 112, 67, 0.5);
-  opacity: 0.7;
-}
-
-.p-tower--main  { left: 50%; transform: translateX(-50%); width: 14%; height: 66%; }
-.p-tower--mid   { width: 10%;  height: 48%; bottom: 24%; }
-.p-tower--l1    { left: 27%; }
-.p-tower--r1    { right: 27%; }
-.p-tower--outer { width: 8.5%; height: 34%; bottom: 22%; }
-.p-tower--l2    { left: 9%; }
-.p-tower--r2    { right: 9%; }
-
-/* Kuppeln ------------------------------------------------------------- */
-
-.p-dome {
-  position: absolute;
-  left: 50%;
-  bottom: 100%;
-  transform: translateX(-50%);
-  width: 116%;
-  height: 74px;
-  border-radius: 50% 50% 26% 26% / 74% 74% 26% 26%;
-  background: linear-gradient(90deg,
-      #35060c 0%, #7d1220 30%, #c02033 52%, #630e19 78%, #240409 100%);
-  box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.45);
-}
-
-.p-tower--mid .p-dome   { height: 54px; }
-.p-tower--outer .p-dome { height: 42px; }
-
-.p-spire {
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 66px);
-  transform: translateX(-50%);
-  width: 5px;
-  height: 46px;
-  border-radius: 3px 3px 0 0;
-  background: linear-gradient(180deg, #ff5a42, #7d1220);
-  box-shadow: 0 0 18px rgba(255, 90, 66, 0.55);
-}
-
-/* Mauern & Tor -------------------------------------------------------- */
-
-.p-wall {
-  position: absolute;
-  left: 6%;
-  bottom: 0;
-  width: 88%;
-  height: 30%;
-  border-radius: 10px 10px 6px 6px;
-  background: linear-gradient(90deg,
-      #240409 0%, #5c0d17 26%, #8b1626 50%, #4c0b14 74%, #1a0206 100%);
-  box-shadow: inset 0 -24px 40px rgba(0, 0, 0, 0.5);
-}
-
-/* Zinnen auf der Mauerkrone */
-.p-wall::before {
-  content: "";
-  position: absolute;
-  bottom: 100%;
-  left: 2%;
-  width: 96%;
-  height: 15px;
-  background: repeating-linear-gradient(90deg,
-      #6d101c 0 20px, transparent 20px 42px);
-}
-
-.p-wall--front {
-  left: 17%;
-  width: 66%;
-  height: 20%;
-  border-radius: 10px 10px 6px 6px;
-  background: linear-gradient(90deg,
-      #300610 0%, #75121f 30%, #a4192b 52%, #5a0d16 76%, #200307 100%);
-}
-
-.p-wall--front::before {
-  height: 11px;
-  background: repeating-linear-gradient(90deg,
-      #8b1626 0 16px, transparent 16px 34px);
-}
-
-.p-gate {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  width: 13%;
-  height: 17%;
-  border-radius: 50% 50% 4px 4px / 78% 78% 4px 4px;
-  background: linear-gradient(180deg, #ff7043 0%, #b3131f 45%, #2a0409 100%);
-  box-shadow: 0 0 34px rgba(255, 112, 67, 0.45);
-}
-
-.p-glow {
-  position: absolute;
-  left: 50%;
-  bottom: -6%;
-  transform: translateX(-50%);
-  width: 120%;
-  height: 40%;
-  background: radial-gradient(ellipse at center, rgba(179, 19, 31, 0.42), transparent 70%);
-  filter: blur(26px);
-}
-
-/* ==========================================================================
-   Vordergrund-Vorhang mit blubbernder Lava-Kante
-   ========================================================================== */
-
-.veil {
-  position: fixed;
   left: 0;
-  top: 0;
-  width: 100%;
-  height: 240vh;
-  z-index: 900;
+  right: 0;
+  bottom: 0;
+  height: 46%;
+  background: linear-gradient(to bottom,
+      rgba(103, 87, 62, 0) 0%,
+      rgba(60, 45, 30, 0.55) 48%,
+      rgba(30, 21, 13, 0.9) 78%,
+      var(--bg-top) 100%);
   pointer-events: none;
-  background: #000;
-  /* Ruhelage: 3/4 der Sichthöhe sind Inhalt. Ohne JavaScript bleibt es dabei,
-     die Seite ist also auch dann lesbar. */
-  transform: translateY(75vh);
-  will-change: transform, opacity;
 }
 
-/* Startlage der Intro-Animation – gesetzt vom Inline-Skript im <head>. */
-.veil-boot .veil {
-  transform: translateY(0);
+.hero__inner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
 }
 
-/* Sanftes Herunterfahren beim Seitenstart */
-.veil.is-intro {
-  transition: transform 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+.hero__title {
+  font-size: clamp(3rem, 11vw, 6.5rem);
+  letter-spacing: 0.08em;
+  margin: 0;
+  color: #fff8f0;
+  text-shadow: 0 4px 26px rgba(40, 20, 5, 0.75), 0 1px 3px rgba(40, 20, 5, 0.9);
 }
 
-/* Die gewölbte Kante sitzt direkt über dem schwarzen Block */
-.veil__dome {
-  position: absolute;
-  bottom: 100%;
-  left: -25%;
-  width: 150%;
-  height: var(--dome-h);
-  overflow: visible;
-}
-
-.veil__curve {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.veil__curve path {
-  fill: #000;
-}
-
-.veil__lava {
-  position: absolute;
-  inset: 0;
-  overflow: visible;
-}
-
-/* Einzelne Lava-Elemente (Kreise, Rechtecke, Dreiecke) */
-.lava {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle at 34% 30%, #fff3ec 0%, #ff7a45 26%, var(--color-red-bright) 58%, #8e0b16 100%);
-  box-shadow: 0 0 16px 4px rgba(255, 60, 32, 0.55);
-  transform: translate(-50%, -50%);
-  animation: lava-pulse 2.6s ease-in-out infinite;
-  will-change: transform;
-}
-
-.lava--rect {
-  border-radius: 22%;
-  animation-name: lava-wobble;
-}
-
-.lava--tri {
-  border-radius: 0;
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-  box-shadow: none;
-  filter: drop-shadow(0 0 10px rgba(255, 60, 32, 0.6));
-  animation-name: lava-wobble;
-}
-
-/* Aufsteigende Blasen, die sich auflösen */
-.lava--bubble {
-  animation-name: lava-bubble;
-  animation-timing-function: ease-out;
-}
-
-@keyframes lava-pulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50%      { transform: translate(-50%, -62%) scale(1.28); }
-}
-
-@keyframes lava-wobble {
-  0%, 100% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
-  50%      { transform: translate(-50%, -66%) rotate(16deg) scale(1.18); }
-}
-
-@keyframes lava-bubble {
-  0%   { transform: translate(-50%, -40%) scale(0.35); opacity: 0; }
-  18%  { opacity: 0.95; }
-  100% { transform: translate(-50%, -420%) scale(1.15); opacity: 0; }
-}
-
-/* Verdampfen am Footer */
-.veil.is-vanishing .lava {
-  animation-name: lava-bubble;
-  animation-duration: 2.2s;
-}
-
-/* Im interaktiven Modus gibt es weder Vorhang noch Palast */
-body[data-mode="interactive"] .veil,
-body[data-mode="interactive"] .backdrop {
-  display: none;
+.hero__subtitle {
+  margin: 0.5em 0 0;
+  font-size: clamp(0.95rem, 2.4vw, 1.25rem);
+  color: #fdf0e2;
+  text-shadow: 0 2px 14px rgba(40, 20, 5, 0.85);
 }
 
 /* ==========================================================================
-   Hamburger-Menü (orange, immer über dem Vorhang)
+   Hamburger-Menü
    ========================================================================== */
 
 .hamburger {
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 1000;
+  z-index: 100;
   width: 46px;
   height: 46px;
-  background: rgba(20, 6, 0, 0.55);
+  background: rgba(20, 6, 0, 0.5);
   border: 1px solid rgba(255, 140, 26, 0.6);
   border-radius: 10px;
   display: flex;
@@ -365,12 +147,12 @@ body[data-mode="interactive"] .backdrop {
   position: fixed;
   top: 76px;
   right: 20px;
-  z-index: 1000;
+  z-index: 100;
   background: rgba(12, 5, 2, 0.94);
   border: 1px solid rgba(255, 140, 26, 0.45);
   border-radius: 12px;
   padding: 8px;
-  min-width: 232px;
+  min-width: 200px;
   backdrop-filter: blur(6px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
 }
@@ -380,17 +162,11 @@ body[data-mode="interactive"] .backdrop {
 
 .menu-link {
   display: block;
-  width: 100%;
   padding: 11px 13px;
-  background: none;
-  border: none;
   border-radius: 7px;
   color: var(--color-orange-light);
-  font-family: inherit;
   font-size: 0.95rem;
-  text-align: left;
   text-decoration: none;
-  cursor: pointer;
   transition: background 0.18s ease, color 0.18s ease;
 }
 
@@ -399,48 +175,26 @@ body[data-mode="interactive"] .backdrop {
   color: #fff0dc;
 }
 
-.mode-switch-btn {
-  font-weight: 700;
-  color: var(--color-orange);
-}
-
 /* ==========================================================================
-   Inhalt
+   Inhalt – dunkle Zone zwischen den beiden Bildern
    ========================================================================== */
-
-.site-header {
-  position: relative;
-  z-index: 2;
-  padding: 150px 20px 60px;
-  text-align: center;
-  overflow: hidden;
-}
-
-.header-bg { display: none; } /* nur im interaktiven Modus, siehe interactive.css */
-
-.site-title {
-  position: relative;
-  z-index: 2;
-  font-size: clamp(2.4rem, 8vw, 4.2rem);
-  letter-spacing: 0.06em;
-  color: var(--color-text);
-  text-shadow: 0 0 34px rgba(255, 60, 32, 0.35);
-}
-
-.site-title .subtitle {
-  display: block;
-  font-size: 0.3em;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  color: var(--color-text-muted);
-  margin-top: 0.5em;
-  text-shadow: none;
-}
 
 main {
   position: relative;
-  z-index: 2;
-  padding: 0 20px 90px;
+  padding: 70px 20px 120px;
+  background-color: var(--bg-mid);
+  /* Der Verlauf liegt über einem optionalen Nachtbild. Fehlt die Datei,
+     bleibt einfach die Hintergrundfarbe stehen. */
+  background-image:
+    linear-gradient(to bottom,
+        var(--bg-top) 0%,
+        rgba(11, 7, 5, 0.88) 18%,
+        rgba(11, 7, 5, 0.88) 80%,
+        var(--bg-bottom) 100%),
+    url("../assets/images/middle-night.jpg");
+  background-size: 100% 100%, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
 }
 
 .intro-text {
@@ -449,8 +203,6 @@ main {
   text-align: center;
   font-size: 1.3rem;
 }
-
-.gradient-text { color: var(--color-text); }
 
 .content-block {
   max-width: var(--content-max-width);
@@ -473,7 +225,7 @@ main {
 
 .team-section {
   max-width: 900px;
-  margin: 0 auto 60px;
+  margin: 0 auto;
 }
 
 .team-section h2 {
@@ -489,95 +241,126 @@ main {
 }
 
 .team-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 90, 66, 0.22);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 140, 26, 0.2);
   border-radius: 12px;
   padding: 18px 20px;
 }
 
-.team-card h3 { font-size: 1.1rem; color: var(--color-red-glow); }
+.team-card h3 { font-size: 1.1rem; color: var(--color-orange-light); }
 .team-card p  { font-size: 0.92rem; color: var(--color-text-muted); margin: 0; }
 
-/* Reveal-on-scroll ----------------------------------------------------- */
+/* Sanftes Einblenden beim Scrollen ------------------------------------- */
 
-.reveal {
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
+.reveal { transition: opacity 0.7s ease, transform 0.7s ease; }
 
-/* Nur ausblenden, wenn JavaScript läuft und den Text auch wieder einblenden
-   kann – sonst stünde die Seite leer da. */
-.veil-boot .reveal {
-  opacity: 0;
-  transform: translateY(24px);
-}
-
-.veil-boot .reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+.js .reveal { opacity: 0; transform: translateY(22px); }
+.js .reveal.is-visible { opacity: 1; transform: translateY(0); }
 
 /* ==========================================================================
-   Footer
+   Footer – Sand mit den eingeritzten Begriffen
    ========================================================================== */
+
+/* Übergangsband: führt von der dunklen Mitte in den Sandton des Footerbilds.
+   Liegt bewusst ÜBER dem Bild statt darauf, damit die in den Sand
+   geschriebenen Wörter nicht überdeckt werden. */
+.footer-transition {
+  height: clamp(120px, 15vw, 200px);
+  background: linear-gradient(to bottom,
+      var(--bg-bottom) 0%,
+      #4a2c14 42%,
+      #8a5626 72%,
+      var(--sand-top) 100%);
+}
 
 .site-footer {
   position: relative;
+  background-color: var(--sand-top);
+  background-image: url("../assets/images/footer-sand.jpg");
+  /* Seitenverhältnis des Bilds (1600x800), damit die Wörter im Sand nicht
+     angeschnitten oder verzerrt werden. */
+  aspect-ratio: 2 / 1;
+  max-height: 74vh;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 20px 30px;
+}
+
+/* Kurze Kaschierung der Bildoberkante, damit dort keine harte Linie steht. */
+.site-footer::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 16%;
+  background: linear-gradient(to bottom,
+      var(--sand-top) 0%,
+      rgba(195, 128, 60, 0) 100%);
+  pointer-events: none;
+}
+
+/* Die Wörter im Sand sind Deko – anklickbar ist diese Leiste. Sie bekommt
+   einen weichen dunklen Träger, damit sie auf dem hellen Sand sicher lesbar
+   bleibt, egal welcher Bildausschnitt gerade dahinterliegt. */
+.footer-inner {
+  position: relative;
   z-index: 2;
-}
-
-.footer-stones {
-  height: 28px;
-  background: linear-gradient(to bottom, #ffffff, var(--color-stone));
-}
-
-.footer-sand {
-  background-color: var(--color-sand);
-  background-image: url("../assets/images/footer-sand.png"),
-                    url("../assets/images/footer-placeholder.svg");
-  background-size: cover, cover;
-  background-position: center, center;
-  padding: 46px 20px 30px;
   text-align: center;
-  color: #2c1c0a;
+  padding: 14px 26px 12px;
+  border-radius: 14px;
+  background: rgba(38, 21, 8, 0.55);
+  backdrop-filter: blur(3px);
 }
 
 .footer-links {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 22px;
-  margin-bottom: 16px;
+  gap: 24px;
+  margin-bottom: 10px;
 }
 
 .footer-links a {
   text-decoration: none;
   font-weight: 700;
-  color: #2c1c0a;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+  color: #ffd9a8;
 }
 
-.footer-links a:hover { text-decoration: underline; }
+.footer-links a:hover {
+  color: #fff3e2;
+  text-decoration: underline;
+}
 
 .copyright {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   margin: 0;
-  color: #3a2712;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  color: #e8c8a4;
 }
 
 /* ==========================================================================
    Responsive / Barrierefreiheit
    ========================================================================== */
 
-@media (max-width: 600px) {
-  .site-header { padding: 120px 16px 40px; }
+@media (max-width: 700px) {
+  .hero {
+    min-height: 70vh;
+    padding-top: 18vh;
+    background-position: center 78%;
+  }
+  .hero::after { height: 40%; }
+  main { padding: 50px 18px 90px; }
   .content-block, .intro-text { margin-bottom: 50px; }
-  .palace { height: 38vh; bottom: 24vh; }
+  /* Hochkant ist ein 2:1-Footer sehr flach – etwas mehr Höhe, dafür
+     beschnittener Sand. */
+  .site-footer { aspect-ratio: auto; min-height: 230px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .veil.is-intro { transition: none; }
-  .lava { animation: none !important; }
   .reveal { transition: none; }
 }
