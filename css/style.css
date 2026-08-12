@@ -50,7 +50,10 @@ p { line-height: 1.7; margin: 0 0 1em; }
 
 .hero {
   position: relative;
+  /* svh = kleine Viewporthöhe: springt nicht, wenn mobile Browser ihre
+     Adressleiste ein- und ausblenden. vh bleibt als Fallback davor. */
   min-height: 88vh;
+  min-height: 88svh;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -107,11 +110,11 @@ p { line-height: 1.7; margin: 0 0 1em; }
 
 .hamburger {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: calc(20px + env(safe-area-inset-top, 0px));
+  right: calc(20px + env(safe-area-inset-right, 0px));
   z-index: 100;
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
   background: rgba(20, 6, 0, 0.5);
   border: 1px solid rgba(255, 140, 26, 0.6);
   border-radius: 10px;
@@ -124,9 +127,13 @@ p { line-height: 1.7; margin: 0 0 1em; }
   box-shadow: 0 0 18px rgba(255, 140, 26, 0.22);
 }
 
-.hamburger:hover {
-  border-color: var(--color-orange-light);
-  box-shadow: 0 0 24px rgba(255, 140, 26, 0.45);
+/* Hover nur auf Geräten mit echtem Zeiger – sonst bleibt der Effekt auf
+   Touchscreens nach dem Antippen sichtbar hängen. */
+@media (hover: hover) {
+  .hamburger:hover {
+    border-color: var(--color-orange-light);
+    box-shadow: 0 0 24px rgba(255, 140, 26, 0.45);
+  }
 }
 
 .hamburger span {
@@ -144,14 +151,15 @@ p { line-height: 1.7; margin: 0 0 1em; }
 
 .menu {
   position: fixed;
-  top: 76px;
-  right: 20px;
+  top: calc(78px + env(safe-area-inset-top, 0px));
+  right: calc(20px + env(safe-area-inset-right, 0px));
   z-index: 100;
   background: rgba(12, 5, 2, 0.94);
   border: 1px solid rgba(255, 140, 26, 0.45);
   border-radius: 12px;
   padding: 8px;
   min-width: 200px;
+  max-width: calc(100vw - 40px);
   backdrop-filter: blur(6px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
 }
@@ -161,7 +169,7 @@ p { line-height: 1.7; margin: 0 0 1em; }
 
 .menu-link {
   display: block;
-  padding: 11px 13px;
+  padding: 14px 16px;
   border-radius: 7px;
   color: var(--color-orange-light);
   font-size: 0.95rem;
@@ -169,9 +177,17 @@ p { line-height: 1.7; margin: 0 0 1em; }
   transition: background 0.18s ease, color 0.18s ease;
 }
 
-.menu-link:hover {
-  background: rgba(255, 140, 26, 0.14);
-  color: #fff0dc;
+@media (hover: hover) {
+  .menu-link:hover {
+    background: rgba(255, 140, 26, 0.14);
+    color: #fff0dc;
+  }
+}
+
+/* Wechsel zur anderen Design-Version – hebt sich von den Platzhalter-Links ab. */
+.menu-link--version {
+  color: var(--color-red-glow);
+  font-weight: 700;
 }
 
 /* ==========================================================================
@@ -230,35 +246,6 @@ main {
   text-align: center;
   margin-top: 1.5em;
 }
-
-/* Team ---------------------------------------------------------------- */
-
-.team-section {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.team-section h2 {
-  text-align: center;
-  font-size: 1.6rem;
-  margin-bottom: 1em;
-}
-
-.team-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
-}
-
-.team-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 140, 26, 0.2);
-  border-radius: 12px;
-  padding: 18px 20px;
-}
-
-.team-card h3 { font-size: 1.1rem; color: var(--color-orange-light); }
-.team-card p  { font-size: 0.92rem; color: var(--color-text-muted); margin: 0; }
 
 /* Sanftes Einblenden beim Scrollen ------------------------------------- */
 
@@ -381,9 +368,11 @@ main {
   text-shadow: 0 1px 3px rgba(20, 10, 2, 0.6);
 }
 
-.footer-links a:hover {
-  color: #fff6e8;
-  text-decoration: underline;
+@media (hover: hover) {
+  .footer-links a:hover {
+    color: #fff6e8;
+    text-decoration: underline;
+  }
 }
 
 .copyright {
@@ -397,14 +386,17 @@ main {
    Responsive / Barrierefreiheit
    ========================================================================== */
 
+/* Tablets und große Handys */
 @media (max-width: 700px) {
   .hero {
     min-height: 70vh;
+    min-height: 70svh;
     padding-top: 18vh;
     background-position: center 78%;
   }
   .hero::after { height: 40%; }
   main { padding: 50px 18px 90px; }
+  .intro-text { font-size: 1.18rem; }
   .content-block, .intro-text { margin-bottom: 50px; }
   /* Kleinere Kachel, sonst sieht man auf dem Handy nur einen Ausschnitt
      einer einzigen Düne. */
@@ -416,6 +408,39 @@ main {
   .site-footer::before { height: 200px; bottom: 130px; }
   .footer-links { gap: 15px; }
   .footer-links a { font-size: 0.92rem; }
+}
+
+/* Handys. Der Hero wird kürzer, damit direkt darunter schon Text sichtbar
+   ist, und die Schriftgrößen werden auf Lesegrößen zurückgenommen. */
+@media (max-width: 480px) {
+  .hero {
+    min-height: 62vh;
+    min-height: 62svh;
+    padding-top: 14vh;
+  }
+  .hero__title {
+    font-size: clamp(2.6rem, 15vw, 4rem);
+    letter-spacing: 0.05em;
+  }
+  main { padding: 40px 16px 70px; }
+  .intro-text {
+    font-size: 1.08rem;
+    margin-bottom: 44px;
+  }
+  .content-block { margin-bottom: 44px; }
+  .content-block h2 { font-size: 1.28rem; }
+  .footer-links { gap: 12px 18px; }
+}
+
+/* Querformat auf dem Handy: sonst füllt allein der Hero mehr als den
+   gesamten Bildschirm und man sieht beim Laden nur das Bild. */
+@media (max-height: 520px) and (orientation: landscape) {
+  .hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-top: 8vh;
+  }
+  .site-footer { min-height: 240px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
