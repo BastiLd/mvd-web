@@ -395,6 +395,13 @@ h1, h2, h3, h4 {
   margin-bottom: 1.2em;
 }
 
+.cards__note {
+  max-width: 640px;
+  margin: 0 auto clamp(30px, 4vw, 50px);
+  text-align: center;
+  color: var(--text-on-dark-muted);
+}
+
 .cards__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
