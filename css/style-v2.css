@@ -113,6 +113,20 @@ h1, h2, h3, h4 {
 
 .ph::after { content: attr(data-label); }
 
+/* Nur für Screenreader sichtbar – z.B. wenn eine Überschrift bereits fest
+   in ein Bild eingebrannt ist und nicht doppelt sichtbar sein soll. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Topbar ----------------------------------------------------------------- */
 
 .topbar {
@@ -289,6 +303,14 @@ h1, h2, h3, h4 {
   margin: 0 auto 2em;
 }
 
+.hero__badge {
+  display: block;
+  width: min(220px, 55vw);
+  margin: 0 auto 2em;
+  border-radius: 18px;
+  box-shadow: 0 0 44px rgba(226, 35, 26, 0.35), 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
 /* Badge-Reihe ------------------------------------------------------------ */
 
 .badges {
@@ -416,6 +438,14 @@ h1, h2, h3, h4 {
 }
 
 .ph--card { aspect-ratio: 16 / 9; }
+
+.card__media {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: top center;
+}
 
 .card__body { padding: clamp(20px, 2.6vw, 28px); }
 .card__body h3 { font-size: 1.22rem; }
