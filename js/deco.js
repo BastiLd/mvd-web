@@ -16,18 +16,6 @@
 
    Mehrere Formen gleichzeitig gehen mit Komma: data-deco="play,spark"
 
-   ---------------------------------------------------------------------------
-   ORIGINALFARBEN
-   Trägt <html> die Klasse "deco-original", werden die Symbole in den Farben
-   ihrer echten Plattformen gezeichnet statt in den zurückhaltenden Tönen des
-   jeweiligen Bereichs. Gesetzt wird die Klasse von js/deco-colors.js
-   (Schalter unten links).
-
-   Das Feature komplett loswerden: <script src="js/deco-colors.js"> aus den
-   HTML-Seiten nehmen und die Datei löschen. Dann wird die Klasse nie gesetzt
-   und hier bleibt es dauerhaft bei den passenden Farben – an diesem Skript
-   ist nichts zu ändern.
-   ---------------------------------------------------------------------------
    ========================================================================== */
 
 (function () {
@@ -38,8 +26,6 @@
 
   var hosts = Array.prototype.slice.call(document.querySelectorAll("[data-deco]"));
   if (!hosts.length) { return; }
-
-  var root = document.documentElement;
 
   function random(min, max) { return min + Math.random() * (max - min); }
 
@@ -124,16 +110,6 @@
   };
 
   var FILLED = { spark: true };
-
-  /* Die echten Farben der jeweiligen Plattform bzw. des Gegenstands. */
-  var ORIGINAL = {
-    play: "#ff0033",
-    bubble: "#5865f2",
-    key: "#e8b53c",
-    shield: "#7fa8d8",
-    gear: "#b8c4d0",
-    spark: "#ff7a1a"
-  };
 
   function setup(host) {
     var kinds = host.getAttribute("data-deco").split(",").map(function (k) {
@@ -222,8 +198,6 @@
     }
 
     function draw() {
-      var original = root.classList.contains("deco-original");
-
       ctx.clearRect(0, 0, width, height);
       ctx.lineJoin = "round";
 
@@ -237,21 +211,13 @@
         var edge = Math.min(1, Math.min(y, height - y) / (height * 0.16));
         var a = it.alpha * Math.max(0, edge) * (0.65 + 0.35 * Math.sin(it.phase));
 
-        /* Originalfarben tragen sich selbst, die gedeckten Töne stecken
-           schon in der rgba-Angabe. */
-        var color;
-        if (original) {
-          color = ORIGINAL[it.kind];
-          a *= it.spark ? 0.9 : 0.75;
-        } else {
-          color = it.spark ? mutedSpark : muted;
-        }
+        var color = it.spark ? mutedSpark : muted;
 
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(it.angle);
         ctx.scale(it.size, it.size);
-        ctx.lineWidth = (original ? 2.4 : 2) / it.size;
+        ctx.lineWidth = 2 / it.size;
         ctx.globalAlpha = a;
 
         if (it.spark) { ctx.fillStyle = color; } else { ctx.strokeStyle = color; }
@@ -332,11 +298,6 @@
 
     document.addEventListener("visibilitychange", function () {
       if (document.hidden) { stop(); } else { start(); }
-    });
-
-    /* Wechselt der Farbmodus, muss auch ein gerade stehendes Bild neu. */
-    document.addEventListener("deco-colors-changed", function () {
-      if (!running) { draw(); }
     });
 
     resize();

@@ -353,6 +353,15 @@ main {
   fill: currentColor;
 }
 
+/* Optischer Ausgleich: Die Zeichen füllen ihr 24er-Feld unterschiedlich stark
+   aus. Twitch und Instagram gehen bis an den Rand, YouTube und Discord nur
+   über gut zwei Drittel der Höhe. Bei gleicher Kastengröße wirken die
+   ersten beiden deshalb deutlich größer. Diese Werte gleichen das aus. */
+.social-icon[data-brand="twitch"] svg    { width: 14px; height: 14px; }
+.social-icon[data-brand="instagram"] svg { width: 14px; height: 14px; }
+.social-icon[data-brand="x"] svg         { width: 16px; height: 16px; }
+.social-icon[data-brand="tiktok"] svg    { width: 16px; height: 16px; }
+
 @media (hover: hover) {
   .social-icon:hover {
     background: rgba(255, 140, 26, 0.22);
@@ -414,6 +423,11 @@ main {
   .footer-social { gap: 9px; margin-bottom: 14px; }
   .social-icon { width: 34px; height: 34px; }
   .social-icon svg { width: 16px; height: 16px; }
+
+  .social-icon[data-brand="twitch"] svg    { width: 13px; height: 13px; }
+  .social-icon[data-brand="instagram"] svg { width: 13px; height: 13px; }
+  .social-icon[data-brand="x"] svg         { width: 14px; height: 14px; }
+  .social-icon[data-brand="tiktok"] svg    { width: 14px; height: 14px; }
   .footer-links a { font-size: 0.92rem; }
 }
 
@@ -453,4 +467,105 @@ main {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { transition: none; }
+}
+
+/* ==========================================================================
+   Social-Media-Icons: Markenfarben (js/icon-colors.js)
+
+   Ohne die Klasse "brand-icons" auf <html> greift hier nichts und die Icons
+   bleiben zurückhaltend. Wird das Feature entfernt, kann dieser Block
+   stehenbleiben – er wird dann nie aktiv.
+   ========================================================================== */
+
+.brand-icons .social-icon {
+  border-color: transparent;
+  color: #fff;
+  /* Heller Ring, damit die dunklen Marken (X, TikTok) auf dunklem Grund
+     nicht verschwinden. */
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.brand-icons .social-icon[data-brand="youtube"]  { background: #ff0000; }
+.brand-icons .social-icon[data-brand="twitch"]   { background: #9146ff; }
+.brand-icons .social-icon[data-brand="discord"]  { background: #5865f2; }
+.brand-icons .social-icon[data-brand="tiktok"]   { background: #010101; }
+.brand-icons .social-icon[data-brand="x"]        { background: #000000; }
+
+/* Instagram hat keine einzelne Hausfarbe, sondern seinen Verlauf. */
+.brand-icons .social-icon[data-brand="instagram"] {
+  background: radial-gradient(circle at 30% 108%,
+      #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+}
+
+@media (hover: hover) {
+  .brand-icons .social-icon:hover {
+    filter: brightness(1.15);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.55);
+  }
+}
+
+/* ==========================================================================
+   Schalter für die Icon-Farben (js/icon-colors.js)
+   ========================================================================== */
+
+.icon-toggle {
+  position: fixed;
+  left: calc(16px + env(safe-area-inset-left, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 95;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  /* 44px hoch: sichere Trefferfläche auf dem Handy. */
+  min-height: 44px;
+  max-width: calc(100vw - 32px);
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 140, 26, 0.45);
+  border-radius: 999px;
+  background: rgba(12, 6, 2, 0.88);
+  backdrop-filter: blur(6px);
+  color: var(--color-orange-light);
+  font-family: var(--font-base);
+  font-size: 0.82rem;
+  line-height: 1.2;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+/* Farbpunkt, der den Zustand zeigt. */
+.icon-toggle::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.icon-toggle[aria-pressed="true"]::before {
+  background: conic-gradient(#ff0000, #9146ff, #5865f2, #d6249f, #010101, #ff0000);
+}
+
+@media (hover: hover) {
+  .icon-toggle:hover {
+    background: rgba(255, 140, 26, 0.18);
+    border-color: var(--color-orange-light);
+    color: #fff0dc;
+  }
+}
+
+.icon-toggle:focus-visible {
+  outline: 2px solid var(--color-orange-light);
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .icon-toggle {
+    left: calc(10px + env(safe-area-inset-left, 0px));
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    max-width: calc(100vw - 76px);
+    padding: 9px 13px;
+    font-size: 0.76rem;
+  }
 }

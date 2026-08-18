@@ -450,6 +450,156 @@ main { padding-top: 46px; padding-bottom: 80px; }
 .pair { margin-top: 8px; }
 
 /* ==========================================================================
+   Fragen als Kacheln (js/qa-tiles.js)
+
+   Die <details> im HTML bleiben als Rückfallebene bestehen und werden vom
+   Skript ausgeblendet. Läuft kein JavaScript, greift keine dieser Regeln und
+   man sieht die gewohnten Aufklapper.
+   ========================================================================== */
+
+.qa-tiles {
+  list-style: none;
+  margin: 1.4em 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.qa-tile {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  min-height: 84px;
+  padding: 16px 16px 16px 18px;
+  border: 1px solid rgba(255, 140, 26, 0.24);
+  border-radius: 12px;
+  background: rgba(12, 9, 14, 0.6);
+  color: var(--color-red-glow);
+  font-family: var(--font-base);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease,
+              color 0.18s ease, transform 0.18s ease;
+}
+
+.qa-tile__text { flex: 1 1 auto; }
+
+/* Pfeil nach rechts – zeigt an, dass sich etwas öffnet. */
+.qa-tile__mark {
+  flex: 0 0 auto;
+  width: 0;
+  height: 0;
+  margin-top: 0.35em;
+  border-left: 8px solid currentColor;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  transition: transform 0.18s ease;
+}
+
+@media (hover: hover) {
+  .qa-tile:hover {
+    border-color: rgba(255, 140, 26, 0.6);
+    background: rgba(20, 14, 20, 0.8);
+    color: var(--color-orange-light);
+    transform: translateY(-2px);
+  }
+  .qa-tile:hover .qa-tile__mark { transform: translateX(3px); }
+}
+
+.qa-tile:focus-visible {
+  outline: 2px solid var(--color-orange-light);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Antwort-Fenster
+   ========================================================================== */
+
+.qa-dialog {
+  width: min(620px, calc(100vw - 32px));
+  max-height: min(78vh, 640px);
+  padding: 0;
+  border: 1px solid rgba(255, 140, 26, 0.4);
+  border-radius: 14px;
+  background: linear-gradient(160deg, #16101a 0%, #0c0a0f 100%);
+  color: var(--color-text);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.75);
+  overflow: hidden;
+}
+
+.qa-dialog::backdrop {
+  background: rgba(4, 3, 8, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.qa-dialog__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px 20px 16px 24px;
+  border-bottom: 1px solid rgba(255, 140, 26, 0.22);
+}
+
+.qa-dialog__title {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: 1.18rem;
+  line-height: 1.4;
+  color: var(--color-orange-light);
+}
+
+.qa-dialog__close {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  margin: -6px -4px 0 0;
+  border: 1px solid rgba(255, 140, 26, 0.35);
+  border-radius: 10px;
+  background: rgba(255, 140, 26, 0.08);
+  color: var(--color-orange-light);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+@media (hover: hover) {
+  .qa-dialog__close:hover {
+    background: rgba(255, 140, 26, 0.2);
+    border-color: var(--color-orange-light);
+    color: #fff0dc;
+  }
+}
+
+.qa-dialog__close:focus-visible {
+  outline: 2px solid var(--color-orange-light);
+  outline-offset: 2px;
+}
+
+.qa-dialog__body {
+  padding: 20px 24px 24px;
+  /* Lange Antworten scrollen im Fenster, nicht die Seite darunter. */
+  max-height: calc(min(78vh, 640px) - 92px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Der kopierte Antwortblock braucht hier keine Einrückung mehr. */
+.qa-dialog__body .qa__inner { padding: 0; }
+.qa-dialog__body > :last-child { margin-bottom: 0; }
+
+/* Solange das Fenster offen ist, soll die Seite darunter stillstehen. */
+body.has-dialog { overflow: hidden; }
+
+/* ==========================================================================
    Deko-Ebenen
    ========================================================================== */
 
@@ -632,6 +782,14 @@ main { padding-top: 46px; padding-bottom: 80px; }
   .abbr-box { padding: 22px 18px 18px; }
 
   .qa__inner { padding: 2px 16px 12px 30px; }
+
+  /* Nebeneinander wird auf dem Handy zu eng – eine Kachel pro Zeile. */
+  .qa-tiles { grid-template-columns: 1fr; gap: 10px; }
+  .qa-tile { min-height: 0; padding: 14px 14px 14px 16px; font-size: 0.96rem; }
+  .qa-dialog { width: calc(100vw - 20px); max-height: 82vh; }
+  .qa-dialog__head { padding: 18px 14px 14px 18px; }
+  .qa-dialog__title { font-size: 1.05rem; }
+  .qa-dialog__body { padding: 16px 18px 20px; max-height: calc(82vh - 84px); }
   .tag-list li { font-size: 0.85rem; padding: 5px 11px; }
 
   /* Untereinander und etwas kleiner – nebeneinander wird es hier zu eng. */
@@ -691,72 +849,5 @@ main { padding-top: 46px; padding-bottom: 80px; }
        die feste Bezugsbreite bleiben, wären die letzten beiden Abschnitte
        beide am Anschlag und der Fortschritt nicht mehr ablesbar. */
     width: calc(var(--band-progress, 0) * 100%);
-  }
-}
-
-/* ==========================================================================
-   Schalter für die Symbolfarben (js/deco-colors.js)
-   Wird das Feature entfernt, greifen diese Regeln einfach nicht mehr.
-   ========================================================================== */
-
-.deco-toggle {
-  position: fixed;
-  left: calc(16px + env(safe-area-inset-left, 0px));
-  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-  z-index: 90;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 10px 16px;
-  border: 1px solid rgba(255, 140, 26, 0.45);
-  border-radius: 999px;
-  background: rgba(12, 6, 2, 0.86);
-  backdrop-filter: blur(6px);
-  color: var(--color-orange-light);
-  font-family: var(--font-base);
-  font-size: 0.82rem;
-  cursor: pointer;
-  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
-}
-
-/* Kleiner Farbpunkt vor der Beschriftung, der den Zustand zeigt. */
-.deco-toggle::before {
-  content: "";
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: currentColor;
-  flex: 0 0 auto;
-}
-
-.deco-toggle[aria-pressed="true"] {
-  border-color: rgba(255, 90, 66, 0.7);
-  color: #ffd9c2;
-}
-
-.deco-toggle[aria-pressed="true"]::before {
-  background: conic-gradient(#ff0033, #5865f2, #e8b53c, #7fa8d8, #ff7a1a, #ff0033);
-}
-
-@media (hover: hover) {
-  .deco-toggle:hover {
-    background: rgba(255, 140, 26, 0.18);
-    border-color: var(--color-orange-light);
-    color: #fff0dc;
-  }
-}
-
-.deco-toggle:focus-visible {
-  outline: 2px solid var(--color-orange-light);
-  outline-offset: 3px;
-}
-
-@media (max-width: 700px) {
-  .deco-toggle {
-    left: calc(10px + env(safe-area-inset-left, 0px));
-    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-    padding: 9px 13px;
-    font-size: 0.76rem;
   }
 }
