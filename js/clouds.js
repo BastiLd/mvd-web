@@ -50,6 +50,50 @@
     { x: 0.28, y: 0.28, r: 0.60 }
   ];
 
+  /* Lage des Textblocks auf dem Canvas. Wird bei jeder Größenänderung neu
+     gemessen, damit das Loch immer dort sitzt, wo der Text wirklich steht. */
+  var textBox = null;
+
+  function measureText() {
+    var inner = document.querySelector(".sky__inner");
+    if (!inner) { textBox = null; return; }
+
+    var cr = canvas.getBoundingClientRect();
+    var ir = inner.getBoundingClientRect();
+
+    textBox = {
+      cx: ir.left - cr.left + ir.width / 2,
+      cy: ir.top - cr.top + ir.height / 2,
+      rx: ir.width * 0.78,
+      ry: ir.height * 1.05
+    };
+  }
+
+  /* Weiches Loch in die Wolkenebene stanzen, damit hinter Überschrift und
+     Untertitel nichts liegt. Früher lag dort ein abdunkelndes Element über
+     den Wolken – das zeichnete sich als sichtbarer Kasten ab. Ausgestanzt
+     wird dagegen die Wolke selbst, dadurch gibt es überhaupt keine Kante. */
+  function punchText() {
+    if (!textBox) { return; }
+
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.save();
+    ctx.translate(textBox.cx, textBox.cy);
+    ctx.scale(textBox.rx, textBox.ry);
+
+    var g = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+    g.addColorStop(0, "rgba(0, 0, 0, 1)");
+    g.addColorStop(0.5, "rgba(0, 0, 0, 0.92)");
+    g.addColorStop(0.78, "rgba(0, 0, 0, 0.45)");
+    g.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(0, 0, 1, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
   function resize() {
     var rect = canvas.getBoundingClientRect();
     /* Auf schmalen Displays bleiben die Wolken kleiner, sonst füllt eine
@@ -65,6 +109,8 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     var base = Math.max(100, Math.min(width * 0.175, 225));
+
+    measureText();
 
     clouds = PLAN.map(function (p) {
       return {
@@ -134,6 +180,8 @@
     for (var i = 0; i < clouds.length; i++) {
       drawCloud(clouds[i], t);
     }
+
+    punchText();
 
     ctx.globalCompositeOperation = "source-over";
     window.requestAnimationFrame(frame);

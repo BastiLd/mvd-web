@@ -87,32 +87,19 @@
   max-width: 720px;
 }
 
-/* Dezenter Abdunkler direkt hinter dem Text. Sorgt dafür, dass Überschrift und
-   Untertitel auch dann klar lesbar bleiben, wenn eine helle Wolke
-   dahinterzieht. */
-.sky__inner::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 150%;
-  height: 300%;
-  background: radial-gradient(ellipse at center,
-      rgba(4, 6, 12, 0.86) 0%,
-      rgba(4, 6, 12, 0.6) 42%,
-      rgba(4, 6, 12, 0.24) 66%,
-      transparent 80%);
-  z-index: -1;
-  pointer-events: none;
-}
-
 .sky__title {
   font-size: clamp(2.6rem, 9vw, 5.5rem);
   letter-spacing: 0.06em;
   margin: 0;
   color: #fff8f0;
-  text-shadow: 0 4px 26px rgba(10, 12, 30, 0.9), 0 1px 3px rgba(0, 0, 0, 0.95);
+  /* Statt eines abdunkelnden Kastens hinter dem Text – der zeichnete sich
+     als sichtbarer Schattenblock gegen die Wolken ab – tragen jetzt der
+     Textschatten und ein weiches Loch in der Wolkenebene (js/clouds.js)
+     die Lesbarkeit. */
+  text-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.95),
+    0 4px 30px rgba(6, 8, 20, 0.9),
+    0 0 60px rgba(6, 8, 20, 0.8);
 }
 
 .sky__subtitle {
@@ -120,7 +107,9 @@
   font-size: clamp(0.95rem, 2.4vw, 1.2rem);
   color: #e7dccf;
   letter-spacing: 0.02em;
-  text-shadow: 0 2px 14px rgba(6, 8, 20, 0.95);
+  text-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.95),
+    0 0 34px rgba(6, 8, 20, 0.9);
 }
 
 /* Sprungmarken zu den drei Hauptpunkten. */
@@ -702,5 +691,72 @@ main { padding-top: 46px; padding-bottom: 80px; }
        die feste Bezugsbreite bleiben, wären die letzten beiden Abschnitte
        beide am Anschlag und der Fortschritt nicht mehr ablesbar. */
     width: calc(var(--band-progress, 0) * 100%);
+  }
+}
+
+/* ==========================================================================
+   Schalter für die Symbolfarben (js/deco-colors.js)
+   Wird das Feature entfernt, greifen diese Regeln einfach nicht mehr.
+   ========================================================================== */
+
+.deco-toggle {
+  position: fixed;
+  left: calc(16px + env(safe-area-inset-left, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 140, 26, 0.45);
+  border-radius: 999px;
+  background: rgba(12, 6, 2, 0.86);
+  backdrop-filter: blur(6px);
+  color: var(--color-orange-light);
+  font-family: var(--font-base);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+/* Kleiner Farbpunkt vor der Beschriftung, der den Zustand zeigt. */
+.deco-toggle::before {
+  content: "";
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: 0 0 auto;
+}
+
+.deco-toggle[aria-pressed="true"] {
+  border-color: rgba(255, 90, 66, 0.7);
+  color: #ffd9c2;
+}
+
+.deco-toggle[aria-pressed="true"]::before {
+  background: conic-gradient(#ff0033, #5865f2, #e8b53c, #7fa8d8, #ff7a1a, #ff0033);
+}
+
+@media (hover: hover) {
+  .deco-toggle:hover {
+    background: rgba(255, 140, 26, 0.18);
+    border-color: var(--color-orange-light);
+    color: #fff0dc;
+  }
+}
+
+.deco-toggle:focus-visible {
+  outline: 2px solid var(--color-orange-light);
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .deco-toggle {
+    left: calc(10px + env(safe-area-inset-left, 0px));
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    padding: 9px 13px;
+    font-size: 0.76rem;
   }
 }

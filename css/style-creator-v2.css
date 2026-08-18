@@ -828,3 +828,75 @@
 
   .band::after, .band::before { height: 6px; }
 }
+
+/* ==========================================================================
+   Schalter für die Symbolfarben (js/deco-colors.js)
+   Wird das Feature entfernt, greifen diese Regeln einfach nicht mehr.
+   ========================================================================== */
+
+.deco-toggle {
+  position: fixed;
+  left: clamp(12px, 3vw, 26px);
+  bottom: clamp(12px, 3vw, 26px);
+  z-index: 70;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, color 0.16s ease;
+}
+
+/* Kleiner Farbpunkt vor der Beschriftung, der den Zustand zeigt. */
+.deco-toggle::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ink);
+  flex: 0 0 auto;
+}
+
+.deco-toggle[aria-pressed="true"] {
+  background: var(--ink);
+  color: #fff;
+}
+
+.deco-toggle[aria-pressed="true"]::before {
+  background: conic-gradient(#ff0033, #5865f2, #e8b53c, #7fa8d8, #ff7a1a, #ff0033);
+}
+
+@media (hover: hover) {
+  .deco-toggle:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+}
+
+.deco-toggle:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.deco-toggle:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+@media (max-width: 780px) {
+  .deco-toggle {
+    padding: 9px 13px;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+  }
+}

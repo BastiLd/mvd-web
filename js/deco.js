@@ -15,10 +15,19 @@
    sucht die Bereiche selbst und legt das Canvas an.
 
    Mehrere Formen gleichzeitig gehen mit Komma: data-deco="play,spark"
-   ---------------------------------------------------------------------------
 
-   Gezeichnet wird auf je einem Canvas hinter dem Inhalt. Die Objekte treiben
-   langsam nach oben und drehen sich dabei leicht.
+   ---------------------------------------------------------------------------
+   ORIGINALFARBEN
+   Trägt <html> die Klasse "deco-original", werden die Symbole in den Farben
+   ihrer echten Plattformen gezeichnet statt in den zurückhaltenden Tönen des
+   jeweiligen Bereichs. Gesetzt wird die Klasse von js/deco-colors.js
+   (Schalter unten links).
+
+   Das Feature komplett loswerden: <script src="js/deco-colors.js"> aus den
+   HTML-Seiten nehmen und die Datei löschen. Dann wird die Klasse nie gesetzt
+   und hier bleibt es dauerhaft bei den passenden Farben – an diesem Skript
+   ist nichts zu ändern.
+   ---------------------------------------------------------------------------
    ========================================================================== */
 
 (function () {
@@ -29,6 +38,8 @@
 
   var hosts = Array.prototype.slice.call(document.querySelectorAll("[data-deco]"));
   if (!hosts.length) { return; }
+
+  var root = document.documentElement;
 
   function random(min, max) { return min + Math.random() * (max - min); }
 
@@ -114,6 +125,16 @@
 
   var FILLED = { spark: true };
 
+  /* Die echten Farben der jeweiligen Plattform bzw. des Gegenstands. */
+  var ORIGINAL = {
+    play: "#ff0033",
+    bubble: "#5865f2",
+    key: "#e8b53c",
+    shield: "#7fa8d8",
+    gear: "#b8c4d0",
+    spark: "#ff7a1a"
+  };
+
   function setup(host) {
     var kinds = host.getAttribute("data-deco").split(",").map(function (k) {
       return k.trim();
@@ -135,8 +156,8 @@
                host.classList.contains("band--basti") ||
                host.getAttribute("data-deco-dark") === "true";
 
-    var stroke = dark ? "rgba(255, 255, 255, 0.16)" : "rgba(20, 20, 26, 0.13)";
-    var sparkColor = "rgba(226, 35, 26, 0.5)";
+    var muted = dark ? "rgba(255, 255, 255, 0.16)" : "rgba(20, 20, 26, 0.13)";
+    var mutedSpark = "rgba(226, 35, 26, 0.5)";
 
     var width = 0;
     var height = 0;
@@ -152,8 +173,10 @@
       return {
         kind: kind,
         spark: isSpark,
-        x: random(0.04, 0.96) * width,
-        y: spawnAnywhere ? random(0, height) : height + random(20, 120),
+        /* Als Anteil der Fläche gespeichert, nicht in Pixeln: dadurch bleibt
+           die Anordnung erhalten, wenn der Bereich seine Größe ändert. */
+        u: random(0.04, 0.96),
+        v: spawnAnywhere ? random(0, 1) : 1 + random(0.03, 0.2),
         size: isSpark ? random(3, 7) : random(26, 62),
         rise: isSpark ? random(14, 34) : random(6, 17),
         drift: random(-9, 9),
@@ -169,9 +192,13 @@
       var rect = canvas.getBoundingClientRect();
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-      width = rect.width;
-      height = rect.height;
-      if (!width || !height) { return; }
+      var w = Math.round(rect.width);
+      var h = Math.round(rect.height);
+      if (!w || !h) { return; }
+      if (w === width && h === height) { return; }
+
+      width = w;
+      height = h;
 
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
@@ -181,8 +208,59 @@
          zugestellt. */
       var count = width < 620 ? 5 : Math.round(Math.min(14, Math.max(7, width / 130)));
 
-      items = [];
-      for (var i = 0; i < count; i++) { items.push(makeItem(true)); }
+      /* Beim ersten Mal neu aufbauen, danach nur noch die Anzahl anpassen.
+         Die vorhandenen Objekte bleiben stehen – sie liegen in Anteilen vor
+         und sitzen nach der Größenänderung an derselben relativen Stelle. */
+      if (!items.length) {
+        for (var i = 0; i < count; i++) { items.push(makeItem(true)); }
+      } else {
+        while (items.length < count) { items.push(makeItem(true)); }
+        while (items.length > count) { items.pop(); }
+      }
+
+      draw();
+    }
+
+    function draw() {
+      var original = root.classList.contains("deco-original");
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.lineJoin = "round";
+
+      for (var i = 0; i < items.length; i++) {
+        var it = items[i];
+        var x = it.u * width;
+        var y = it.v * height;
+
+        /* Am oberen und unteren Rand ausblenden, damit nichts hart
+           auftaucht oder abgeschnitten wird. */
+        var edge = Math.min(1, Math.min(y, height - y) / (height * 0.16));
+        var a = it.alpha * Math.max(0, edge) * (0.65 + 0.35 * Math.sin(it.phase));
+
+        /* Originalfarben tragen sich selbst, die gedeckten Töne stecken
+           schon in der rgba-Angabe. */
+        var color;
+        if (original) {
+          color = ORIGINAL[it.kind];
+          a *= it.spark ? 0.9 : 0.75;
+        } else {
+          color = it.spark ? mutedSpark : muted;
+        }
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(it.angle);
+        ctx.scale(it.size, it.size);
+        ctx.lineWidth = (original ? 2.4 : 2) / it.size;
+        ctx.globalAlpha = a;
+
+        if (it.spark) { ctx.fillStyle = color; } else { ctx.strokeStyle = color; }
+
+        SHAPES[it.kind](ctx);
+        ctx.restore();
+      }
+
+      ctx.globalAlpha = 1;
     }
 
     function frame(now) {
@@ -192,46 +270,20 @@
       var dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
-      ctx.clearRect(0, 0, width, height);
-      ctx.lineWidth = 2;
-      ctx.lineJoin = "round";
-
       for (var i = 0; i < items.length; i++) {
         var it = items[i];
 
-        it.y -= it.rise * dt;
-        it.x += it.drift * dt;
+        /* In Anteilen bewegen, damit ein wachsender Bereich (z.B. eine
+           aufgeklappte Antwort) die Objekte nicht mitzieht oder streckt. */
+        it.v -= (it.rise * dt) / height;
+        it.u += (it.drift * dt) / width;
         it.angle += it.spin * dt;
         it.phase += it.pulse * dt;
 
-        if (it.y < -it.size * 1.5) {
-          items[i] = makeItem(false);
-          continue;
-        }
-
-        /* Am oberen und unteren Rand ausblenden, damit nichts hart
-           auftaucht oder abgeschnitten wird. */
-        var edge = Math.min(1, Math.min(it.y, height - it.y) / (height * 0.16));
-        var a = it.alpha * Math.max(0, edge) * (0.65 + 0.35 * Math.sin(it.phase));
-
-        ctx.save();
-        ctx.translate(it.x, it.y);
-        ctx.rotate(it.angle);
-        ctx.scale(it.size, it.size);
-        ctx.lineWidth = 2 / it.size;
-        ctx.globalAlpha = a;
-
-        if (it.spark) {
-          ctx.fillStyle = sparkColor;
-        } else {
-          ctx.strokeStyle = stroke;
-        }
-
-        SHAPES[it.kind](ctx);
-        ctx.restore();
+        if (it.v < -0.08) { items[i] = makeItem(false); }
       }
 
-      ctx.globalAlpha = 1;
+      draw();
       window.requestAnimationFrame(frame);
     }
 
@@ -247,14 +299,15 @@
       ctx.clearRect(0, 0, width, height);
     }
 
-    var resizeTimer = null;
-    function remeasure() {
-      window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(function () {
-        resize();
-        if (running) { lastTime = 0; }
-      }, 150);
-    }
+    /* Direkt neu messen, ohne Umweg über einen Frame oder einen Timer.
+       Jede Verzögerung bedeutet, dass der Browser das alte Bild so lange auf
+       die neue Fläche streckt – genau das war beim Aufklappen einer Antwort
+       als Verzerren zu sehen.
+
+       Der ResizeObserver meldet sich nach dem Layout, dort ist Messen also
+       sicher. Eine Endlosschleife entsteht nicht: geändert wird nur die
+       Zeichenfläche des Canvas, nicht seine Größe im Layout. */
+    function remeasure() { resize(); }
 
     window.addEventListener("resize", remeasure);
 
@@ -262,8 +315,28 @@
       new ResizeObserver(remeasure).observe(canvas);
     }
 
+    /* Zusätzlicher, direkter Auslöser: Klappt in diesem Bereich eine Antwort
+       auf oder zu, wächst er über rund 280 ms hinweg. Der Observer allein
+       reicht dafür nicht überall zuverlässig, deshalb wird während der
+       Bewegung ein paar Mal nachgemessen. Ohne das streckt der Browser das
+       alte Bild sichtbar mit. */
+    var STEPS = [0, 60, 130, 200, 290, 360];
+
+    Array.prototype.forEach.call(host.querySelectorAll("details"), function (details) {
+      details.addEventListener("toggle", function () {
+        for (var i = 0; i < STEPS.length; i++) {
+          window.setTimeout(remeasure, STEPS[i]);
+        }
+      });
+    });
+
     document.addEventListener("visibilitychange", function () {
       if (document.hidden) { stop(); } else { start(); }
+    });
+
+    /* Wechselt der Farbmodus, muss auch ein gerade stehendes Bild neu. */
+    document.addEventListener("deco-colors-changed", function () {
+      if (!running) { draw(); }
     });
 
     resize();

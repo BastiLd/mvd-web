@@ -21,6 +21,7 @@ js/qa.js           Aufklapp-Verhalten der Frage/Antwort-Blöcke (V1 + V2)
 js/footer-scene.js Footer-Landschaft V1: Dünen, Bewuchs, Treibsand, Sandhosen
 js/night.js        Sternschnuppen und Glühwürmchen (V1)
 js/deco.js         schwebende Objekte je Bereich, gesteuert über data-deco
+js/deco-colors.js  Schalter: Symbole passend oder in Originalfarben
 js/section-nav.js  Fortschrittsbalken + Sprungmarken, gesteuert über data-nav
 js/hero-video.js   lädt das Hero-Video der V2-Startseite erst bei Bedarf
 assets/videos/hero.mp4   Titelvideo der V2-Startseite (16 MB)
@@ -115,3 +116,11 @@ Bereich braucht nur:
 
 Die Anzahl der Bereiche steht nirgends fest eingetragen. Deko in einem
 Bereich wieder loswerden: `data-deco` aus dem HTML löschen.
+
+## Symbolfarben-Schalter entfernen
+
+Der Schalter unten links steckt vollständig in `js/deco-colors.js`. Zum
+Entfernen genügt es, das `<script src="js/deco-colors.js">` aus
+`creator.html` und `creator-v2.html` zu löschen und die Datei wegzuwerfen.
+Danach zeichnet `js/deco.js` dauerhaft in den gedeckten, zum Bereich
+passenden Tönen – dort ist nichts anzupassen.

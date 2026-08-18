@@ -127,30 +127,42 @@
     }
   }
 
-  /* Ein Kaktus: Stamm plus ein bis zwei Arme, als reine Silhouette. */
+  /* Ein Kaktus: Stamm plus zwei Arme, als reine Silhouette.
+
+     Jeder Arm besteht aus einem waagrechten Stück, das vom Stamm wegführt,
+     und einem senkrechten Stück, das an dessen Ende NACH OBEN steht. Die
+     senkrechten Teile beginnen also oberhalb des Quersstücks – zeichnet man
+     sie darunter, hängen die Arme nach unten. */
   function drawCactus(x, groundY, scale, color) {
-    var w = 3.4 * scale;
-    var h = 20 * scale;
+    var w = 3.4 * scale;   // Dicke von Stamm und Armen
+    var h = 20 * scale;    // Höhe des Stamms
 
     ctx.fillStyle = color;
+
+    /* Stamm */
     ctx.beginPath();
     roundRect(x - w / 2, groundY - h, w, h, w / 2);
     ctx.fill();
 
-    /* Arm links */
+    /* Linker Arm: Querstück auf halber Höhe … */
+    var lyJoint = groundY - h * 0.48;
     ctx.beginPath();
-    roundRect(x - w * 2.1, groundY - h * 0.72, w * 0.85, h * 0.42, w / 2);
+    roundRect(x - w * 2.1, lyJoint, w * 2.1 + w / 2, w * 0.85, w / 2);
     ctx.fill();
+    /* … und der Aufwärtsteil an seinem äußeren Ende. */
+    var lTop = groundY - h * 0.82;
     ctx.beginPath();
-    roundRect(x - w * 2.1, groundY - h * 0.72, w * 2.1, w * 0.85, w / 2);
+    roundRect(x - w * 2.1, lTop, w * 0.85, (lyJoint + w * 0.85) - lTop, w / 2);
     ctx.fill();
 
-    /* Arm rechts, etwas höher */
+    /* Rechter Arm, etwas höher angesetzt */
+    var ryJoint = groundY - h * 0.64;
     ctx.beginPath();
-    roundRect(x + w * 1.25, groundY - h * 0.86, w * 0.85, h * 0.5, w / 2);
+    roundRect(x - w / 2, ryJoint, w * 2.2, w * 0.85, w / 2);
     ctx.fill();
+    var rTop = groundY - h * 0.94;
     ctx.beginPath();
-    roundRect(x + w * 0.4, groundY - h * 0.86, w * 1.7, w * 0.85, w / 2);
+    roundRect(x + w * 1.35, rTop, w * 0.85, (ryJoint + w * 0.85) - rTop, w / 2);
     ctx.fill();
   }
 
