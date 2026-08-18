@@ -263,7 +263,7 @@ main {
    exakt eine Kachelbreite, dadurch springt nichts. */
 .site-footer {
   position: relative;
-  min-height: 390px;
+  min-height: 430px;
   padding: 0 20px 30px;
   display: flex;
   align-items: flex-end;
@@ -365,6 +365,57 @@ main {
   text-align: center;
 }
 
+/* Nur für Screenreader – die Logos tragen ihren Namen sonst nirgends. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Plattform-Logos. Inline-SVG statt Bilddateien: nichts nachzuladen und in
+   jeder Größe scharf. Noch ohne Verlinkung. */
+.footer-social {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.social-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(246, 220, 180, 0.4);
+  background: rgba(30, 16, 6, 0.35);
+  color: #f6dcb4;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.social-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+@media (hover: hover) {
+  .social-icon:hover {
+    background: rgba(255, 140, 26, 0.22);
+    border-color: var(--color-orange-light);
+    color: #fff6e8;
+  }
+}
+
 .footer-links {
   display: flex;
   flex-wrap: wrap;
@@ -412,13 +463,16 @@ main {
   .content-block, .intro-text { margin-bottom: 50px; }
   /* Kleinere Kachel, sonst sieht man auf dem Handy nur einen Ausschnitt
      einer einzigen Düne. */
-  .site-footer { min-height: 320px; --footer-base: 118px; }
+  .site-footer { min-height: 380px; --footer-base: 118px; }
   .dune { --tile: 680px; --tile-h: 260px; }
   .dune--1 { bottom: 78px; }
   .dune--2 { bottom: 52px; }
   .dune--3 { bottom: 26px; }
   .site-footer::before { height: 200px; bottom: 130px; }
   .footer-links { gap: 15px; }
+  .footer-social { gap: 9px; margin-bottom: 14px; }
+  .social-icon { width: 34px; height: 34px; }
+  .social-icon svg { width: 16px; height: 16px; }
   .footer-links a { font-size: 0.92rem; }
 }
 

@@ -496,13 +496,41 @@ h1, h2, h3, h4 {
   margin-bottom: 1.2em;
 }
 
-.footer__social { display: flex; gap: 12px; margin-bottom: 0.9em; }
+.footer__social { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 0.9em; }
 
 .social-dot {
   width: 34px;
   height: 34px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Plattform-Logos als Inline-SVG: nichts nachzuladen und in jeder Größe
+   scharf. Noch ohne Verlinkung. */
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: var(--text-on-dark-muted);
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.social-icon svg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+}
+
+@media (hover: hover) {
+  .social-icon:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+  }
 }
 
 .footer__links { list-style: none; margin: 0; padding: 0; }

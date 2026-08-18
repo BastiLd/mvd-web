@@ -1,5 +1,5 @@
 /* ==========================================================================
-   MUDE Web – Creator-Seite, Design V2 (Ergänzung zu style-v2.css)
+   MVD Web – Creator-Seite, Design V2 (Ergänzung zu style-v2.css)
    Wird IMMER nach style-v2.css geladen. Topbar, Menü, Buttons, .hl, Footer
    und das Reveal-Verhalten kommen von dort.
 
@@ -92,6 +92,9 @@
     drop-shadow(-2.5px 0 0 var(--ink))
     drop-shadow(0 2.5px 0 var(--ink))
     drop-shadow(0 -2.5px 0 var(--ink));
+  /* Grundzustand: ohne laufende Animation (z.B. bei reduzierter Bewegung)
+     bleibt die Größenstaffelung der Wolken trotzdem erhalten. */
+  transform: scale(var(--s, 1));
   animation: cloud-drift var(--dur, 34s) ease-in-out infinite alternate;
 }
 
@@ -119,16 +122,18 @@
 
 /* Bewusst am Rand und unterhalb des Textblocks – keine Wolke darf hinter
    Überschrift, Claim oder Buttons liegen, sonst leidet die Lesbarkeit. */
-.cloud--1 { left: 3%;   top: 17%; --dur: 30s; transform: scale(0.9); }
-.cloud--2 { right: 5%;  top: 23%; --dur: 41s; transform: scale(1.15); animation-delay: -6s; }
-.cloud--3 { left: 8%;   top: 76%; --dur: 36s; transform: scale(0.8); animation-delay: -14s; }
-.cloud--4 { right: 10%; top: 82%; --dur: 47s; transform: scale(1.05); animation-delay: -22s; }
-.cloud--5 { left: 45%;  top: 9%;  --dur: 52s; transform: scale(0.6); animation-delay: -9s; }
+.cloud--1 { left: 3%;   top: 17%; --dur: 24s; --s: 0.9; }
+.cloud--2 { right: 5%;  top: 23%; --dur: 31s; --s: 1.15; animation-delay: -6s; }
+.cloud--3 { left: 8%;   top: 76%; --dur: 27s; --s: 0.8;  animation-delay: -14s; }
+.cloud--4 { right: 10%; top: 82%; --dur: 35s; --s: 1.05; animation-delay: -22s; }
+.cloud--5 { left: 45%;  top: 9%;  --dur: 39s; --s: 0.6;  animation-delay: -9s; }
 
-/* Hin und her, nicht quer durchs Bild – so bleibt die Anordnung ruhig. */
+/* Hin und her, nicht quer durchs Bild – so bleibt die Anordnung ruhig.
+   Zusätzlich ein leichtes Auf und Ab und eine Winzigkeit Größenänderung,
+   sonst sieht man die Bewegung auf einem breiten Schirm kaum. */
 @keyframes cloud-drift {
-  from { margin-left: -26px; }
-  to   { margin-left: 26px; }
+  from { transform: translate(-70px, 10px) scale(var(--s, 1)); }
+  to   { transform: translate(70px, -10px) scale(calc(var(--s, 1) * 1.06)); }
 }
 
 /* Hero-Text -------------------------------------------------------------- */
@@ -219,7 +224,8 @@
 
 .band {
   position: relative;
-  padding: clamp(56px, 9vw, 108px) clamp(16px, 5vw, 40px);
+  padding: clamp(48px, 6.5vw, 82px) clamp(16px, 5vw, 40px);
+  overflow: hidden;
   scroll-margin-top: var(--topbar-h);
 }
 
@@ -260,8 +266,10 @@
 /* Kopf des Bereichs – bewusst linksbündig. */
 .band__head {
   text-align: left;
-  margin-bottom: clamp(34px, 5vw, 58px);
+  margin-bottom: clamp(26px, 3.4vw, 42px);
 }
+
+.band__head--tight { margin-bottom: clamp(18px, 2.4vw, 28px); }
 
 /* Nur als Kontur gesetzt. Die Strichfarbe muss explizit stehen: mit
    currentColor wuerde sie zusammen mit dem transparenten Text verschwinden. */
@@ -387,52 +395,31 @@
   outline-offset: -3px;
 }
 
-/* Antwort: linksbündig, in Lesebreite, mit roter Leiste als Einrückung. */
+/* Antwort: linksbündig, in Lesebreite, ohne Leiste. Der Abstand sitzt auf
+   dem inneren Container, damit die Höhe wirklich auf 0 gehen kann – sonst
+   bliebe im zugeklappten Zustand der Innenabstand als Spalt stehen. */
 .qa2__answer {
-  max-width: 68ch;
-  margin: 0 auto;
-  padding: 2px 20px 26px;
-  border-left: 4px solid var(--red);
+  padding: 0;
   text-align: left;
 }
 
-.qa2__answer p:last-child { margin-bottom: 0; }
+.qa2__inner {
+  max-width: 68ch;
+  margin: 0 auto;
+  padding: 2px 4px 26px;
+}
+
+.qa2__inner > :last-child { margin-bottom: 0; }
+
+/* Nur wenn js/qa.js läuft, wird die Höhe animiert. Ohne JavaScript klappt
+   das <details> wie gewohnt sofort auf. */
+.qa--js > .qa2__answer {
+  overflow: hidden;
+  transition: height 0.28s ease;
+}
 
 .band--ink .qa2__answer,
 .band--basti .qa2__answer { color: var(--text-on-dark); }
-
-/* ==========================================================================
-   Discord – gezeichnete Kanalliste statt Screenshot
-   ========================================================================== */
-
-.channels {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 clamp(30px, 5vw, 48px);
-  padding: 20px;
-  border: 2px dashed rgba(255, 255, 255, 0.22);
-  border-radius: 6px;
-}
-
-.channel {
-  padding: 8px 14px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.07);
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
-  color: var(--text-on-dark-muted);
-}
-
-.channels__label {
-  margin-left: auto;
-  font-family: var(--font-display);
-  font-size: 0.72rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-}
 
 /* ==========================================================================
    Basti
@@ -452,29 +439,21 @@
 }
 
 /* ==========================================================================
-   Abkürzungen
+   Abkürzungen – stehen im Basti-Band, nicht mehr in eigener schwarzer Box
    ========================================================================== */
 
 .abbr2 {
-  padding: clamp(46px, 7vw, 80px) clamp(16px, 5vw, 40px);
-  background: var(--paper-dim);
-}
-
-.abbr2__inner {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: clamp(26px, 4vw, 40px);
-  border-radius: 6px;
-  background: var(--ink);
-  color: var(--text-on-dark);
-  box-shadow: 8px 8px 0 rgba(20, 20, 26, 0.16);
+  padding: clamp(20px, 2.6vw, 30px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.22);
 }
 
 .abbr2__title {
-  margin: 0 0 1.2em;
-  font-size: 1rem;
+  margin: 0 0 1.1em;
+  font-family: var(--font-display);
+  font-size: 0.92rem;
   letter-spacing: 0.22em;
-  text-align: center;
   color: var(--text-on-dark-muted);
 }
 
@@ -483,30 +462,192 @@
 .abbr2__row {
   display: flex;
   align-items: baseline;
-  gap: 18px;
-  padding: 11px 0;
+  gap: 16px;
+  padding: 9px 0;
 }
 
 .abbr2__row + .abbr2__row { border-top: 1px solid rgba(255, 255, 255, 0.1); }
 
 .abbr2__row dt {
-  flex: 0 0 62px;
+  flex: 0 0 54px;
   font-family: var(--font-display);
   letter-spacing: 0.08em;
   color: var(--red);
 }
 
-.abbr2__row dd { margin: 0; line-height: 1.5; }
+.abbr2__row dd { margin: 0; line-height: 1.5; font-size: 0.95rem; }
 
 .abbr2__row dd span {
   display: block;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   color: var(--text-on-dark-muted);
+}
+
+/* Basti links, Abkürzungen rechts. */
+.basti-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: clamp(26px, 4vw, 52px);
+  align-items: start;
+}
+
+/* ==========================================================================
+   Zugriff – die beiden Punkte stehen offen nebeneinander
+   ========================================================================== */
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 4vw, 56px);
+  align-items: start;
+}
+
+.split__title {
+  font-family: var(--font-comic);
+  font-size: clamp(1.5rem, 3.4vw, 2.2rem);
+  letter-spacing: 0.03em;
+  margin: 0 0 0.6em;
+  color: var(--red);
+}
+
+.split__col > p:last-child { margin-bottom: 0; }
+
+/* ==========================================================================
+   Aufzählungen und Hinweise
+   ========================================================================== */
+
+.tag-list {
+  list-style: none;
+  margin: 0 0 1em;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-list li {
+  padding: 6px 14px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.86rem;
+  letter-spacing: 0.03em;
+}
+
+.band--ink .tag-list li,
+.band--basti .tag-list li { color: var(--text-on-dark); }
+
+/* Kleiner Hinweis, der nicht Teil der eigentlichen Antwort ist. */
+.info-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 1.5em 0 0;
+  padding: 13px 15px;
+  border-left: 4px solid var(--red);
+  background: rgba(226, 35, 26, 0.07);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.band--ink .info-note,
+.band--basti .info-note {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-on-dark-muted);
+}
+
+.info-note strong { color: var(--red); }
+
+.info-note__mark {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border-radius: 50%;
+  border: 1.5px solid var(--red);
+  color: var(--red);
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 15px;
+  text-align: center;
+}
+
+/* ==========================================================================
+   Deko: großes, sehr blasses Wort hinter jedem Bereich
+   Füllt die sonst leeren Randflächen, ohne vom Text abzulenken.
+   ========================================================================== */
+
+.band__mark {
+  position: absolute;
+  right: -0.06em;
+  bottom: -0.22em;
+  z-index: 0;
+  font-family: var(--font-comic);
+  font-size: clamp(6rem, 19vw, 17rem);
+  line-height: 0.8;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--ink);
+  opacity: 0.05;
+  pointer-events: none;
+  user-select: none;
+}
+
+.band--ink .band__mark,
+.band--basti .band__mark {
+  -webkit-text-stroke-color: #fff;
+  opacity: 0.06;
+}
+
+/* Schräges rotes Band am oberen Rand – greift die .hl-Boxen wieder auf. */
+.band::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(90px, 16vw, 220px);
+  height: 8px;
+  background: var(--red);
+  transform: skewX(-32deg);
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Ab Tablet zweispaltig
+   Vorher stand alles untereinander in der Mitte – auf breiten Schirmen blieb
+   dadurch links und rechts sehr viel leere Fläche. Der Bereichskopf läuft
+   jetzt links mit, die Fragen stehen rechts daneben.
+   ========================================================================== */
+
+@media (min-width: 900px) {
+  .band--qa .band__inner {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.78fr) 1.22fr;
+    gap: clamp(34px, 4.5vw, 70px);
+    align-items: start;
+  }
+
+  .band--qa .band__head {
+    position: sticky;
+    top: calc(var(--topbar-h) + 26px);
+    margin-bottom: 0;
+  }
+
+  .qa-list { max-width: none; }
 }
 
 /* ==========================================================================
    Responsive – alles einspaltig, nichts nebeneinander
    ========================================================================== */
+
+@media (max-width: 900px) {
+  .basti-grid { grid-template-columns: 1fr; }
+}
 
 @media (max-width: 780px) {
   .chero { min-height: 84svh; padding-bottom: 8vh; }
@@ -515,10 +656,9 @@
   .cloud::after { width: 36px; height: 36px; right: 18px; top: -16px; }
 
   .qa2 > summary { padding: 20px 44px; }
-  .qa2__answer { padding: 2px 16px 24px; }
+  .qa2__inner { padding: 2px 2px 24px; }
 
-  .channels { gap: 8px; padding: 16px; }
-  .channels__label { margin-left: 0; width: 100%; }
+  .split { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
@@ -531,14 +671,17 @@
   .chero__jump a { width: 100%; justify-content: center; }
 
   .band__title--sm { max-width: none; }
+  .band__mark { font-size: clamp(4.5rem, 26vw, 8rem); }
+
   .qa2 > summary {
     padding: 18px 40px 18px 12px;
     letter-spacing: 0.04em;
   }
   .qa2 > summary::after { right: 10px; }
-  .qa2__answer { padding: 2px 12px 22px; border-left-width: 3px; }
+  .qa2__inner { padding: 2px 0 22px; }
 
-  .channel { font-size: 0.84rem; padding: 7px 11px; }
+  .tag-list li { font-size: 0.82rem; padding: 5px 11px; }
+  .abbr2 { padding: 20px 16px; }
 
   /* Kürzel über die Erklärung statt daneben. */
   .abbr2__row { flex-direction: column; gap: 2px; }
@@ -548,6 +691,7 @@
 @media (prefers-reduced-motion: reduce) {
   .cloud { animation: none; }
   .chero__rays { animation: none; }
+  .qa--js > .qa2__answer { transition: none; }
   .qa2 > summary,
   .qa2 > summary::after,
   .chero__jump a { transition: none; }

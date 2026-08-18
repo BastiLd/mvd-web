@@ -27,15 +27,17 @@
   var running = false;
   var startTime = 0;
 
-  /* Bauplan der fünf Wolken. y ist der Anteil der Zonenhöhe: die Überschrift
-     sitzt bei etwa 22–38%, das orange Horizontband bei 63%. Die Wolken liegen
-     also bewusst dazwischen und lassen den Text frei. */
+  /* Bauplan der sechs Wolken. y ist der Anteil der Zonenhöhe: die Überschrift
+     sitzt bei etwa 22–38%, das orange Horizontband bei 63%. Das Wolkenband
+     liegt direkt unter dem Text und ist breit über die Fläche gestreut, statt
+     als schmaler Streifen in der Mitte zu hängen. */
   var PLAN = [
-    { y: 0.435, scale: 1.00, x: 0.20, drift: 0.20, period: 78, alpha: 0.30, warm: 0.15 },
-    { y: 0.485, scale: 1.45, x: 0.68, drift: 0.16, period: 96, alpha: 0.26, warm: 0.25 },
-    { y: 0.530, scale: 0.80, x: 0.44, drift: 0.26, period: 63, alpha: 0.24, warm: 0.35 },
-    { y: 0.575, scale: 1.20, x: 0.84, drift: 0.14, period: 110, alpha: 0.22, warm: 0.55 },
-    { y: 0.605, scale: 0.95, x: 0.10, drift: 0.22, period: 87, alpha: 0.18, warm: 0.70 }
+    { y: 0.400, scale: 0.72, x: 0.06, drift: 0.30, period: 78, alpha: 0.20, warm: 0.08 },
+    { y: 0.440, scale: 0.80, x: 0.90, drift: 0.26, period: 63, alpha: 0.21, warm: 0.14 },
+    { y: 0.505, scale: 1.25, x: 0.32, drift: 0.34, period: 96, alpha: 0.26, warm: 0.24 },
+    { y: 0.520, scale: 1.15, x: 0.72, drift: 0.28, period: 110, alpha: 0.25, warm: 0.36 },
+    { y: 0.560, scale: 1.00, x: 0.14, drift: 0.36, period: 87, alpha: 0.22, warm: 0.52 },
+    { y: 0.595, scale: 1.35, x: 0.56, drift: 0.24, period: 124, alpha: 0.19, warm: 0.68 }
   ];
 
   /* Ballen einer Wolke, relativ zu ihrer Grundgröße. */
@@ -56,12 +58,13 @@
 
     width = rect.width;
     height = rect.height;
+    if (!width || !height) { return; }
 
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    var base = Math.max(90, Math.min(width * 0.16, 210));
+    var base = Math.max(100, Math.min(width * 0.175, 225));
 
     clouds = PLAN.map(function (p) {
       return {
@@ -150,6 +153,19 @@
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(resize, 150);
   });
+
+  /* Ein window-resize allein reicht nicht: beim ersten Aufbau kann der Canvas
+     noch keine echte Breite haben (z.B. weil das Layout noch nicht steht).
+     Dann bliebe die Zeichenfläche dauerhaft zu klein, ohne dass je ein
+     resize-Ereignis käme. Der Observer meldet jede Größenänderung des
+     Elements selbst und schließt diese Lücke. */
+  if ("ResizeObserver" in window) {
+    var observerSize = new ResizeObserver(function () {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resize, 150);
+    });
+    observerSize.observe(canvas);
+  }
 
   /* Im Hintergrundtab nicht weiterrechnen. */
   document.addEventListener("visibilitychange", function () {

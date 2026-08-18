@@ -1,5 +1,5 @@
 /* ==========================================================================
-   MUDE Web – Creator-Seite, Design V1 (Ergänzung zu style.css)
+   MVD Web – Creator-Seite, Design V1 (Ergänzung zu style.css)
    Wird IMMER nach style.css geladen. Hier steht nur, was diese Seite
    zusätzlich braucht – Menü, Farben, Footer und Reveal kommen aus style.css.
 
@@ -99,9 +99,10 @@
   width: 150%;
   height: 300%;
   background: radial-gradient(ellipse at center,
-      rgba(4, 6, 12, 0.72) 0%,
-      rgba(4, 6, 12, 0.42) 45%,
-      transparent 75%);
+      rgba(4, 6, 12, 0.86) 0%,
+      rgba(4, 6, 12, 0.6) 42%,
+      rgba(4, 6, 12, 0.24) 66%,
+      transparent 80%);
   z-index: -1;
   pointer-events: none;
 }
@@ -251,15 +252,71 @@
   outline-offset: -2px;
 }
 
-/* Die Antwort ist eingerückt und bekommt eine eigene Leiste – so ist auf
-   einen Blick klar, dass sie zur Frage darüber gehört. */
-.qa__answer {
-  padding: 0 18px 4px 34px;
-  margin-left: 12px;
-  border-left: 2px solid rgba(255, 140, 26, 0.4);
+/* Die Antwort ist nur eingerückt, ohne Leiste. Der Abstand sitzt auf dem
+   inneren Container, damit die Höhe wirklich auf 0 gehen kann – sonst bliebe
+   im zugeklappten Zustand der Innenabstand als Spalt stehen. */
+.qa__answer { padding: 0; }
+
+.qa__inner { padding: 2px 20px 14px 40px; }
+
+.qa__inner > :last-child { margin-bottom: 0; }
+
+/* Nur wenn js/qa.js läuft, wird die Höhe animiert. Ohne JavaScript klappt
+   das <details> wie gewohnt sofort auf. */
+.qa--js > .qa__answer {
+  overflow: hidden;
+  transition: height 0.28s ease;
 }
 
-.qa__answer p:last-child { margin-bottom: 1em; }
+/* Inhalte, die im Original als Aufzählung gemeint sind. */
+.tag-list {
+  list-style: none;
+  margin: 0 0 1em;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-list li {
+  padding: 6px 13px;
+  border: 1px solid rgba(255, 140, 26, 0.3);
+  border-radius: 999px;
+  background: rgba(255, 140, 26, 0.07);
+  font-size: 0.9rem;
+  color: var(--color-orange-light);
+}
+
+/* Kleiner Hinweis, der nicht Teil der eigentlichen Antwort ist. */
+.info-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 1.4em 0 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.info-note strong { color: var(--color-orange-light); }
+
+.info-note__mark {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 140, 26, 0.55);
+  color: var(--color-orange-light);
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 16px;
+  text-align: center;
+}
 
 /* Discord: Satz links, Platzhalter für die Kanal-Bilder rechts ---------- */
 
@@ -300,9 +357,18 @@
   color: rgba(200, 182, 168, 0.75);
 }
 
-/* Abschnitt 4 – Basti, kompakter und in eigenem Kasten ------------------ */
+/* Abschnitt 4 – Basti und die Abkürzungen nebeneinander ----------------- */
 
-.content-block--basti { max-width: 620px; }
+/* Dieser eine Bereich ist breiter als die 680px-Textspalte, sonst blieben für
+   zwei Spalten je nur gut 320px übrig. */
+.pair {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
 
 .basti-box {
   padding: 26px 26px 10px;
@@ -330,9 +396,8 @@
 /* Abkürzungen ----------------------------------------------------------- */
 
 .abbr-box {
-  max-width: var(--content-max-width);
-  margin: 90px auto 0;
-  padding: 30px 28px 26px;
+  height: 100%;
+  padding: 26px 24px 22px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 14px;
   background: rgba(16, 16, 19, 0.88);
@@ -378,6 +443,24 @@
 }
 
 /* ==========================================================================
+   Dichtere Abstände
+   Die Blöcke standen sehr weit auseinander; auf einer reinen Textseite mit
+   Aufklappern entsteht dadurch viel leere Fläche.
+   ========================================================================== */
+
+main { padding-top: 46px; padding-bottom: 80px; }
+
+.intro-text { margin-bottom: 44px; }
+
+.content-block { margin-bottom: 48px; }
+
+.content-block h2 { margin-bottom: 0.5em; }
+
+.qa { margin-bottom: 9px; }
+
+.pair { margin-top: 8px; }
+
+/* ==========================================================================
    Responsive
    ========================================================================== */
 
@@ -403,7 +486,18 @@
   .shot { height: 20px; }
 
   .basti-box { padding: 22px 20px 8px; }
-  .abbr-box { margin-top: 70px; padding: 24px 20px 20px; }
+  .abbr-box { padding: 22px 18px 18px; }
+
+  .qa__inner { padding: 2px 16px 12px 30px; }
+  .tag-list li { font-size: 0.85rem; padding: 5px 11px; }
+
+  /* Untereinander und etwas kleiner – nebeneinander wird es hier zu eng. */
+  .pair {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    font-size: 0.96rem;
+  }
+  .pair .abbr-box { height: auto; }
 }
 
 @media (max-width: 480px) {
@@ -415,7 +509,8 @@
   .sky__jump a { width: 100%; justify-content: center; }
 
   .qa > summary { font-size: 0.98rem; gap: 10px; }
-  .qa__answer { padding-left: 20px; margin-left: 6px; }
+  .qa__inner { padding: 2px 14px 12px 24px; }
+  .info-note { font-size: 0.84rem; padding: 10px 12px; }
 
   .basti-box h2 { font-size: 1.14rem; }
 
@@ -432,5 +527,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .qa > summary::before { transition: none; }
+  .qa--js > .qa__answer { transition: none; }
   .sky__clouds, .sandstorm { display: none; }
 }
