@@ -28,7 +28,9 @@
 
 html {
   scroll-behavior: smooth;
-  background: var(--bg-mid);
+  /* Faerbt die Flaeche ober- und unterhalb des Inhalts. Bewusst die Farbe
+     des Footer-Fusses, damit unten kein sichtbarer Absatz entsteht. */
+  background: #3b2613;
 }
 
 body {
@@ -480,9 +482,10 @@ main {
 .brand-icons .social-icon {
   border-color: transparent;
   color: #fff;
-  /* Heller Ring, damit die dunklen Marken (X, TikTok) auf dunklem Grund
-     nicht verschwinden. */
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+  /* Nur ein Hauch von Ring, damit die dunklen Marken (X, TikTok) auf
+     dunklem Grund nicht verschwinden. Kräftiger gerahmt wirkte es, als
+     hätten die Icons einen weißen Rand. */
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
 }
 
 .brand-icons .social-icon[data-brand="youtube"]  { background: #ff0000; }
@@ -500,7 +503,7 @@ main {
 @media (hover: hover) {
   .brand-icons .social-icon:hover {
     filter: brightness(1.15);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.55);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
   }
 }
 
@@ -568,4 +571,31 @@ main {
     padding: 9px 13px;
     font-size: 0.76rem;
   }
+}
+
+/* TikTok besteht aus drei Ebenen: eine cyanfarbene und eine magentafarbene
+   Kopie leicht versetzt dahinter, die eigentliche Note darüber. Genau so
+   sieht das echte Logo aus. Schlicht bleibt nur die Note sichtbar. */
+.social-icon[data-brand="tiktok"] .tt--cyan,
+.social-icon[data-brand="tiktok"] .tt--magenta { display: none; }
+
+.brand-icons .social-icon[data-brand="tiktok"] .tt--cyan {
+  display: block;
+  fill: #25f4ee;
+  transform: translate(-1.1px, -1.1px);
+}
+
+.brand-icons .social-icon[data-brand="tiktok"] .tt--magenta {
+  display: block;
+  fill: #fe2c55;
+  transform: translate(1.1px, 1.1px);
+}
+
+.brand-icons .social-icon[data-brand="tiktok"] .tt--main { fill: #fff; }
+
+/* Instagram: der Verlauf soll den ganzen Kreis füllen, sonst blitzt an den
+   Rändern der Untergrund durch. */
+.brand-icons .social-icon[data-brand="instagram"] {
+  background-size: 140% 140%;
+  background-position: center;
 }

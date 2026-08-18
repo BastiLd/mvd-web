@@ -111,6 +111,19 @@
 
   var FILLED = { spark: true };
 
+  /* Jede Form hat ihre eigene Farbe, passend zu dem, was sie darstellt:
+     Play in YouTube-Rot, Sprechblasen in Discord-Blau, Schlüssel in Messing,
+     Schilde in Stahlblau, Zahnräder in Metallgrau, Funken in Orange.
+     Das ist fest so – es gibt keinen Umschalter mehr. */
+  var TINT = {
+    play: "255, 0, 51",
+    bubble: "88, 101, 242",
+    key: "232, 181, 60",
+    shield: "127, 168, 216",
+    gear: "159, 176, 194",
+    spark: "255, 122, 26"
+  };
+
   function setup(host) {
     var kinds = host.getAttribute("data-deco").split(",").map(function (k) {
       return k.trim();
@@ -132,8 +145,9 @@
                host.classList.contains("band--basti") ||
                host.getAttribute("data-deco-dark") === "true";
 
-    var muted = dark ? "rgba(255, 255, 255, 0.16)" : "rgba(20, 20, 26, 0.13)";
-    var mutedSpark = "rgba(226, 35, 26, 0.5)";
+    /* Auf hellem Grund tragen die Farben kräftiger als auf dunklem, deshalb
+       dort etwas zurücknehmen. */
+    var tintAlpha = dark ? 0.42 : 0.3;
 
     var width = 0;
     var height = 0;
@@ -211,7 +225,7 @@
         var edge = Math.min(1, Math.min(y, height - y) / (height * 0.16));
         var a = it.alpha * Math.max(0, edge) * (0.65 + 0.35 * Math.sin(it.phase));
 
-        var color = it.spark ? mutedSpark : muted;
+        var color = "rgba(" + TINT[it.kind] + ", " + (it.spark ? tintAlpha + 0.2 : tintAlpha) + ")";
 
         ctx.save();
         ctx.translate(x, y);

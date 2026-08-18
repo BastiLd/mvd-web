@@ -21,6 +21,7 @@ js/qa.js           Aufklapp-Verhalten der Frage/Antwort-Blöcke (V1 + V2)
 js/footer-scene.js Footer-Landschaft V1: Dünen, Bewuchs, Treibsand, Sandhosen
 js/night.js        Sternschnuppen und Glühwürmchen (V1)
 js/deco.js         schwebende Objekte je Bereich, gesteuert über data-deco
+                   (fest eingefärbt: Play rot, Sprechblasen blau, usw.)
 js/icon-colors.js  Schalter: Social-Icons schlicht oder in Markenfarben
 js/qa-tiles.js     Fragen als Kacheln mit Antwort-Fenster (V1)
 js/section-nav.js  Fortschrittsbalken + Sprungmarken, gesteuert über data-nav
