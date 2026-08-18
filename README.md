@@ -1,14 +1,23 @@
-# MVD Web
+# MUDE Web
 
-Website für MVD – Marvel Vereinigt Deutschland. Reines HTML/CSS/JS, kein Build-Schritt,
+Website für MUDE – Marvel Universe Deutschland. Reines HTML/CSS/JS, kein Build-Schritt,
 läuft direkt über GitHub Pages.
 
 ## Struktur
 
 ```
-index.html
-css/style.css      gesamtes Design
+index.html         Startseite V1
+v2.html            Startseite V2
+creator.html       Creator-Seite V1
+creator-v2.html    Creator-Seite V2
+css/style.css              Design V1
+css/style-creator.css      Ergänzung für creator.html
+css/style-v2.css           Design V2
+css/style-creator-v2.css   Ergänzung für creator-v2.html
 js/main.js         Hamburger-Menü + sanftes Einblenden der Textblöcke
+js/main-v2.js      dasselbe für V2, zusätzlich die Topbar beim Scrollen
+js/clouds.js       Wolken-Canvas in der Himmelzone von creator.html
+js/sandstorm.js    Treibsand-Canvas über den Dünen im Footer (V1)
 assets/images/
   header-beach.jpg   Strand mit den fünf Schatten   (ausgeliefert, 428 KB)
   middle-night.jpg   Sternenhimmel hinter dem Text  (ausgeliefert,  54 KB)

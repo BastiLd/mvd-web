@@ -1,0 +1,554 @@
+/* ==========================================================================
+   MUDE Web – Creator-Seite, Design V2 (Ergänzung zu style-v2.css)
+   Wird IMMER nach style-v2.css geladen. Topbar, Menü, Buttons, .hl, Footer
+   und das Reveal-Verhalten kommen von dort.
+
+   Diese Seite kommt ohne ein einziges Bild aus: Wolken, Strahlen und das
+   Halbtonraster sind reine CSS-Formen, damit sie in jeder Größe scharf
+   bleiben und nichts nachgeladen werden muss.
+   ========================================================================== */
+
+:root {
+  /* Comic-Schrift nur für die großen Überschriften dieser Seite. Anton bleibt
+     für Topbar und Buttons, Barlow für den Fließtext. */
+  --font-comic: "Bangers", "Anton", Impact, sans-serif;
+  --sky-1: #bfe0f4;
+  --sky-2: #e3eff7;
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+.chero {
+  position: relative;
+  min-height: 88vh;
+  min-height: 88svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--topbar-h) + 6vh) clamp(16px, 5vw, 40px) 6vh;
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--sky-1) 0%, var(--sky-2) 62%, var(--paper) 100%);
+}
+
+/* Speed-Lines: Strahlen aus der Bildmitte, wie hinter einem Comic-Logo.
+   Liegt ganz hinten – Wolken und Text stehen davor. */
+.chero__rays {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: 44%;
+  width: 190vmax;
+  height: 190vmax;
+  transform: translate(-50%, -50%);
+  background: repeating-conic-gradient(from 0deg at 50% 50%,
+      rgba(226, 35, 26, 0.07) 0deg 2.6deg,
+      transparent 2.6deg 9deg);
+  animation: rays-turn 140s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rays-turn {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Halbtonraster – der typische Rasterdruck alter Hefte. Liegt bewusst auch
+   über den Wolken, dadurch wirken sie wie gedruckt statt wie aufgeklebt. */
+.chero__dots {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background-image: radial-gradient(rgba(20, 20, 26, 0.16) 1.1px, transparent 1.2px);
+  background-size: 9px 9px;
+  /* Nach unten ausblenden, damit der Übergang in den ersten Bereich weich ist. */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, transparent 78%);
+          mask-image: linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, transparent 78%);
+  pointer-events: none;
+}
+
+/* Comic-Wolken ----------------------------------------------------------- */
+
+.chero__sky {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Jede Wolke besteht aus drei weißen Ballen. Die schwarze Kontur entsteht
+   nicht durch border (das würde die Linien zwischen den Ballen zeigen),
+   sondern durch vier versetzte drop-shadows: die folgen der Silhouette der
+   gesamten Form, also nur dem Außenrand. */
+.cloud {
+  position: absolute;
+  width: 150px;
+  height: 54px;
+  background: #fff;
+  border-radius: 999px;
+  filter:
+    drop-shadow(2.5px 0 0 var(--ink))
+    drop-shadow(-2.5px 0 0 var(--ink))
+    drop-shadow(0 2.5px 0 var(--ink))
+    drop-shadow(0 -2.5px 0 var(--ink));
+  animation: cloud-drift var(--dur, 34s) ease-in-out infinite alternate;
+}
+
+.cloud::before,
+.cloud::after {
+  content: "";
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.cloud::before {
+  width: 66px;
+  height: 66px;
+  left: 22px;
+  top: -30px;
+}
+
+.cloud::after {
+  width: 46px;
+  height: 46px;
+  right: 24px;
+  top: -20px;
+}
+
+/* Bewusst am Rand und unterhalb des Textblocks – keine Wolke darf hinter
+   Überschrift, Claim oder Buttons liegen, sonst leidet die Lesbarkeit. */
+.cloud--1 { left: 3%;   top: 17%; --dur: 30s; transform: scale(0.9); }
+.cloud--2 { right: 5%;  top: 23%; --dur: 41s; transform: scale(1.15); animation-delay: -6s; }
+.cloud--3 { left: 8%;   top: 76%; --dur: 36s; transform: scale(0.8); animation-delay: -14s; }
+.cloud--4 { right: 10%; top: 82%; --dur: 47s; transform: scale(1.05); animation-delay: -22s; }
+.cloud--5 { left: 45%;  top: 9%;  --dur: 52s; transform: scale(0.6); animation-delay: -9s; }
+
+/* Hin und her, nicht quer durchs Bild – so bleibt die Anordnung ruhig. */
+@keyframes cloud-drift {
+  from { margin-left: -26px; }
+  to   { margin-left: 26px; }
+}
+
+/* Hero-Text -------------------------------------------------------------- */
+
+.chero__inner {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: var(--wrap);
+  text-align: center;
+}
+
+.chero__kicker {
+  margin: 0 0 0.9em;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.chero__title {
+  font-family: var(--font-comic);
+  font-size: clamp(3.2rem, 13vw, 8rem);
+  letter-spacing: 0.035em;
+  line-height: 0.98;
+  margin: 0;
+  color: var(--ink);
+  /* Versetzter Schatten in Rot – der Offsetdruck-Look aus Comicheften. */
+  text-shadow: 3px 3px 0 rgba(226, 35, 26, 0.28);
+}
+
+.chero__title .hl {
+  color: #fff;
+  text-shadow: 3px 3px 0 rgba(20, 20, 26, 0.3);
+}
+
+.chero__claim {
+  margin: 1.1em auto 0;
+  max-width: 46ch;
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  color: var(--text);
+}
+
+.chero__jump {
+  margin-top: 2.2em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.chero__jump a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 10px 24px;
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  background: #fff;
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, color 0.16s ease;
+}
+
+@media (hover: hover) {
+  .chero__jump a:hover {
+    background: var(--red);
+    color: #fff;
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+}
+
+.chero__jump a:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+/* ==========================================================================
+   Bereiche – jeder Hauptpunkt bekommt ein eigenes, volles Seitenband
+   ========================================================================== */
+
+.band {
+  position: relative;
+  padding: clamp(56px, 9vw, 108px) clamp(16px, 5vw, 40px);
+  scroll-margin-top: var(--topbar-h);
+}
+
+.band--paper { background: var(--paper); }
+
+.band--ink {
+  background: var(--ink);
+  color: var(--text-on-dark);
+}
+
+.band--basti {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(226, 35, 26, 0.22) 0%, transparent 55%),
+    linear-gradient(160deg, #1d1116 0%, var(--ink-soft) 100%);
+  color: var(--text-on-dark);
+}
+
+/* Feiner Rasterschleier auf den dunklen Bändern, damit sie nicht flach wirken. */
+.band--ink::before,
+.band--basti::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1.1px);
+  background-size: 11px 11px;
+  pointer-events: none;
+}
+
+.band__inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--wrap);
+  margin: 0 auto;
+}
+
+.band__inner--narrow { max-width: 860px; }
+
+/* Kopf des Bereichs – bewusst linksbündig. */
+.band__head {
+  text-align: left;
+  margin-bottom: clamp(34px, 5vw, 58px);
+}
+
+/* Nur als Kontur gesetzt. Die Strichfarbe muss explizit stehen: mit
+   currentColor wuerde sie zusammen mit dem transparenten Text verschwinden. */
+.band__num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 7vw, 4.4rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--num-stroke, var(--ink));
+  opacity: 0.3;
+}
+
+.band--ink { --num-stroke: #fff; }
+.band--basti { --num-stroke: var(--red); }
+
+.band__title {
+  font-family: var(--font-comic);
+  font-size: clamp(2.4rem, 8vw, 5rem);
+  letter-spacing: 0.03em;
+  line-height: 1.02;
+  margin: 0.06em 0 0;
+}
+
+.band__title--sm {
+  font-size: clamp(1.6rem, 4.2vw, 2.8rem);
+  line-height: 1.14;
+  max-width: 22ch;
+}
+
+.band__lead {
+  margin: 1.1em 0 0;
+  max-width: 62ch;
+  font-size: clamp(1.02rem, 2vw, 1.16rem);
+}
+
+.band--ink .band__lead,
+.band--basti .band__lead { color: var(--text-on-dark-muted); }
+
+/* Sätze, die im Original keine Frage sind, stehen als eigener Absatz da. */
+.band__note {
+  max-width: 68ch;
+  margin: 26px auto;
+  padding: 16px 20px;
+  border-left: 4px solid var(--red);
+  background: rgba(226, 35, 26, 0.06);
+  font-size: 0.98rem;
+}
+
+.band--ink .band__note { background: rgba(255, 255, 255, 0.05); }
+
+/* ==========================================================================
+   Frage / Antwort
+   Frage mittig und in anderer Schrift als die Antwort, Antwort linksbündig.
+   ========================================================================== */
+
+.qa-list {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.qa2 {
+  border-top: 1px solid rgba(20, 20, 26, 0.14);
+  transition: background 0.18s ease;
+}
+
+.qa2:last-of-type { border-bottom: 1px solid rgba(20, 20, 26, 0.14); }
+
+.band--ink .qa2,
+.band--basti .qa2 { border-color: rgba(255, 255, 255, 0.16); }
+
+.qa2 > summary {
+  position: relative;
+  display: block;
+  padding: 22px 52px;
+  min-height: 48px;
+  cursor: pointer;
+  list-style: none;
+  /* Andere Ebene als die Antwort: gesperrte Barlow-Halbfette statt
+     normalem Fließtext. */
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: clamp(0.92rem, 1.7vw, 1.02rem);
+  letter-spacing: 0.055em;
+  line-height: 1.5;
+  text-align: center;
+  text-transform: uppercase;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.qa2 > summary::-webkit-details-marker { display: none; }
+.qa2 > summary::marker { content: ""; }
+
+/* Plus, das beim Öffnen zum Minus wird. */
+.qa2 > summary::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  width: 15px;
+  height: 15px;
+  margin-top: -7px;
+  background:
+    linear-gradient(var(--red), var(--red)) center/100% 3px no-repeat,
+    linear-gradient(var(--red), var(--red)) center/3px 100% no-repeat;
+  transition: background-size 0.22s ease;
+}
+
+/* Aus dem Plus wird ein Minus: nur der senkrechte Strich verschwindet. */
+.qa2[open] > summary::after { background-size: 100% 3px, 3px 0; }
+
+.qa2[open] > summary { color: var(--red); }
+
+@media (hover: hover) {
+  .qa2:hover { background: rgba(226, 35, 26, 0.05); }
+  .qa2 > summary:hover { color: var(--red); transform: translateY(-1px); }
+  .band--ink .qa2:hover,
+  .band--basti .qa2:hover { background: rgba(255, 255, 255, 0.05); }
+}
+
+.qa2 > summary:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: -3px;
+}
+
+/* Antwort: linksbündig, in Lesebreite, mit roter Leiste als Einrückung. */
+.qa2__answer {
+  max-width: 68ch;
+  margin: 0 auto;
+  padding: 2px 20px 26px;
+  border-left: 4px solid var(--red);
+  text-align: left;
+}
+
+.qa2__answer p:last-child { margin-bottom: 0; }
+
+.band--ink .qa2__answer,
+.band--basti .qa2__answer { color: var(--text-on-dark); }
+
+/* ==========================================================================
+   Discord – gezeichnete Kanalliste statt Screenshot
+   ========================================================================== */
+
+.channels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 clamp(30px, 5vw, 48px);
+  padding: 20px;
+  border: 2px dashed rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+}
+
+.channel {
+  padding: 8px 14px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  color: var(--text-on-dark-muted);
+}
+
+.channels__label {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ==========================================================================
+   Basti
+   ========================================================================== */
+
+.basti2 {
+  max-width: 68ch;
+  font-size: 1.02rem;
+}
+
+.basti2__roles {
+  margin-top: 1.6em;
+  padding-top: 1.2em;
+  border-top: 2px solid var(--red);
+  font-weight: 600;
+  color: #fff;
+}
+
+/* ==========================================================================
+   Abkürzungen
+   ========================================================================== */
+
+.abbr2 {
+  padding: clamp(46px, 7vw, 80px) clamp(16px, 5vw, 40px);
+  background: var(--paper-dim);
+}
+
+.abbr2__inner {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: clamp(26px, 4vw, 40px);
+  border-radius: 6px;
+  background: var(--ink);
+  color: var(--text-on-dark);
+  box-shadow: 8px 8px 0 rgba(20, 20, 26, 0.16);
+}
+
+.abbr2__title {
+  margin: 0 0 1.2em;
+  font-size: 1rem;
+  letter-spacing: 0.22em;
+  text-align: center;
+  color: var(--text-on-dark-muted);
+}
+
+.abbr2__list { margin: 0; }
+
+.abbr2__row {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 11px 0;
+}
+
+.abbr2__row + .abbr2__row { border-top: 1px solid rgba(255, 255, 255, 0.1); }
+
+.abbr2__row dt {
+  flex: 0 0 62px;
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  color: var(--red);
+}
+
+.abbr2__row dd { margin: 0; line-height: 1.5; }
+
+.abbr2__row dd span {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--text-on-dark-muted);
+}
+
+/* ==========================================================================
+   Responsive – alles einspaltig, nichts nebeneinander
+   ========================================================================== */
+
+@media (max-width: 780px) {
+  .chero { min-height: 84svh; padding-bottom: 8vh; }
+  .cloud { width: 116px; height: 44px; }
+  .cloud::before { width: 52px; height: 52px; left: 18px; top: -24px; }
+  .cloud::after { width: 36px; height: 36px; right: 18px; top: -16px; }
+
+  .qa2 > summary { padding: 20px 44px; }
+  .qa2__answer { padding: 2px 16px 24px; }
+
+  .channels { gap: 8px; padding: 16px; }
+  .channels__label { margin-left: 0; width: 100%; }
+}
+
+@media (max-width: 480px) {
+  /* Auf dem Handy stören die kleinen Wolken mehr, als sie bringen. */
+  .cloud--3, .cloud--5 { display: none; }
+  .chero__rays { animation: none; opacity: 0.6; }
+  .chero__dots { background-size: 7px 7px; }
+
+  .chero__jump { flex-direction: column; }
+  .chero__jump a { width: 100%; justify-content: center; }
+
+  .band__title--sm { max-width: none; }
+  .qa2 > summary {
+    padding: 18px 40px 18px 12px;
+    letter-spacing: 0.04em;
+  }
+  .qa2 > summary::after { right: 10px; }
+  .qa2__answer { padding: 2px 12px 22px; border-left-width: 3px; }
+
+  .channel { font-size: 0.84rem; padding: 7px 11px; }
+
+  /* Kürzel über die Erklärung statt daneben. */
+  .abbr2__row { flex-direction: column; gap: 2px; }
+  .abbr2__row dt { flex: 0 0 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cloud { animation: none; }
+  .chero__rays { animation: none; }
+  .qa2 > summary,
+  .qa2 > summary::after,
+  .chero__jump a { transition: none; }
+}

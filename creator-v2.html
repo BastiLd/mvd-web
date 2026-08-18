@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Für Creator – MUDE V2 (Marvel Universe Deutschland)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style-v2.css">
+<link rel="stylesheet" href="css/style-creator-v2.css">
+<script>
+  document.documentElement.classList.add("js");
+</script>
+</head>
+<body>
+
+  <header class="topbar" id="topbar">
+    <a class="topbar__brand" href="v2.html">
+      <span class="hl">MUDE</span>
+    </a>
+
+    <nav class="topbar__nav">
+      <a href="v2.html#idee">Die Idee</a>
+      <a href="creator-v2.html" aria-current="page">Für Creator</a>
+      <a href="v2.html#community">Community</a>
+      <a class="btn btn--red btn--sm" href="creator.html">Design V1</a>
+    </nav>
+
+    <button id="menu-toggle" class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <nav id="menu" class="menu" hidden>
+    <ul>
+      <li><a href="v2.html">Startseite</a></li>
+      <li><a href="creator-v2.html" aria-current="page">Für Creator</a></li>
+      <li><a href="v2.html#community">Community</a></li>
+      <li><a href="v2.html#kontakt">Kontakt</a></li>
+      <li><a class="menu__version" href="creator.html">Design V1 ansehen</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero. Ohne Foto – die Deko sind gezeichnete Comic-Wolken, ein
+       Halbtonraster und Speed-Lines, alles per SVG und CSS. -->
+  <section class="chero">
+    <div class="chero__sky" aria-hidden="true">
+      <span class="cloud cloud--1"></span>
+      <span class="cloud cloud--2"></span>
+      <span class="cloud cloud--3"></span>
+      <span class="cloud cloud--4"></span>
+      <span class="cloud cloud--5"></span>
+    </div>
+    <div class="chero__rays" aria-hidden="true"></div>
+    <div class="chero__dots" aria-hidden="true"></div>
+
+    <div class="chero__inner">
+      <p class="chero__kicker">Creator Seite, Haupt Punkte:</p>
+      <h1 class="chero__title">Für <span class="hl">Creator</span></h1>
+      <p class="chero__claim">Alles zu YouTube, Discord und Zugriff – auf einen Blick.</p>
+
+      <nav class="chero__jump" aria-label="Hauptpunkte">
+        <a href="#youtube">YouTube</a>
+        <a href="#discord">Discord</a>
+        <a href="#zugriff">Zugriff</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 1. YOUTUBE ---------------------------------------------------------- -->
+  <section class="band band--paper" id="youtube">
+    <div class="band__inner">
+      <header class="band__head reveal">
+        <span class="band__num">01</span>
+        <h2 class="band__title"><span class="hl">YouTube</span></h2>
+        <p class="band__lead">Also ihr fragt euch wie das alles mit dem gemeinsamen Kanal funktioniert, dann lasst uns gleich loslegen.</p>
+      </header>
+
+      <div class="qa-list reveal">
+        <details class="qa2">
+          <summary><span>Was soll auf dem gemeinsamen Kanal hochgeladen werden?</span></summary>
+          <div class="qa2__answer">
+            <p>Auf dem Kanal sollen News und Community Videos hochgeladen werden.</p>
+          </div>
+        </details>
+
+        <details class="qa2">
+          <summary><span>Wie entsteht das News Video?</span></summary>
+          <div class="qa2__answer">
+            <p>Es entsteht dadurch, dass alle Creator die dabei sind wenn sie wollen ein eigenes Video erstellen für ihren Kanal und dann können sie dieses dem CEO und COO zeigen und diese bewerten unter anderem welches am meisten Infos hat und dieses wird dann auf dem gemeinsamen Kanal, als Kollaboration hochgeladen das heißt auf dem Kanal der es gemacht hat und auf dem MUDE Kanal erscheinen.</p>
+          </div>
+        </details>
+
+        <details class="qa2">
+          <summary><span>Wie funktionieren die Einnahmen?</span></summary>
+          <div class="qa2__answer">
+            <p>Sobald der Kanal Einnahmen erhält wird es so gehandhabt, dass, wenn es ein gemeinsames Video ist der Betrag zwischen allen die beteiligt waren fair aufgeteilt wird. Wenn es ein News Video ist bekommt der Ersteller 90% und das MUDE Team/CFO &amp; andere 10%. Diese 10% werden für Verschiedenes ausgegeben, was MUDE hilft. Verbesserungen der Website oder ähnliches.</p>
+          </div>
+        </details>
+
+        <p class="band__note reveal">Es wird auch einmal im Monat ein gemeinsames News Video geben wo alle Bereiche genau behandelt und zusammengefasst werden.</p>
+
+        <details class="qa2">
+          <summary><span>Was ist meine Aufgabe als Creator?</span></summary>
+          <div class="qa2__answer">
+            <p>Aktuell gibt es nur eine verbindliche Aufgabe, einmal im Monat beim News Video dabei sein.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. DISCORD ---------------------------------------------------------- -->
+  <section class="band band--ink" id="discord">
+    <div class="band__inner">
+      <header class="band__head reveal">
+        <span class="band__num">02</span>
+        <h2 class="band__title"><span class="hl">Discord</span></h2>
+        <p class="band__lead">Rechts seht ihr Bilder von den Kanälen die es auf dem gemeinsamen Discord-Server gibt.</p>
+      </header>
+
+      <div class="channels reveal" aria-hidden="true">
+        <span class="channel"># willkommen</span>
+        <span class="channel"># news</span>
+        <span class="channel"># creator-chat</span>
+        <span class="channel"># server-liste</span>
+        <span class="channel"># giveaways</span>
+        <span class="channels__label">Bilder folgen</span>
+      </div>
+
+      <div class="qa-list reveal">
+        <details class="qa2">
+          <summary><span>Wofür wird er genutzt?</span></summary>
+          <div class="qa2__answer">
+            <p>Er wird für die Zusammenführung der Community genutzt, er soll keinen bestehenden Server ersetzen, sondern erweitern. Also z.B.: Im News Chat gibt es eine Benachrichtigung für jedes News Video, von jedem Creator.</p>
+            <p>Zudem werden die anderen Server verlinkt und Giveaways wird es nur auf den eigenen Servern geben.</p>
+          </div>
+        </details>
+
+        <details class="qa2">
+          <summary><span>Was ist meine Aufgabe als Creator?</span></summary>
+          <div class="qa2__answer">
+            <p>Es gibt aktuell keine verbindlichen Aufgaben des Creators auf dem Discord-Server.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. ZUGRIFF ---------------------------------------------------------- -->
+  <section class="band band--paper" id="zugriff">
+    <div class="band__inner">
+      <header class="band__head reveal">
+        <span class="band__num">03</span>
+        <h2 class="band__title"><span class="hl">Zugriff</span></h2>
+      </header>
+
+      <div class="qa-list reveal">
+        <details class="qa2">
+          <summary><span>YT</span></summary>
+          <div class="qa2__answer">
+            <p>Der Zugriff auf den gemeinsamen YT-Kanal wird nicht an beteiligte Creator vergeben, sondern bleibt bei den 2 Administratoren/Managern, genauer gesagt dem CEO und COO/CFO.</p>
+            <p>Alles wird zu 100% mit den Creatorn geteilt, was Geld, Community und anderes betrifft.</p>
+          </div>
+        </details>
+
+        <details class="qa2">
+          <summary><span>DC</span></summary>
+          <div class="qa2__answer">
+            <p>Der Discord Zugriff wird so gehandhabt, dass jeder Creator sobald er offiziell Teil des Teams ist eine neue Rolle bekommt die „Team-Creator" heißt und über der normalen Creator-Rolle steht.</p>
+            <p>Damit haben sie Zugang zu Moderator Kanälen und manchen Admin Kanälen und können dort auch schreiben und Vorschläge einbringen.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. BASTI – kompakter, eigener Grund ---------------------------------- -->
+  <section class="band band--basti" id="basti">
+    <div class="band__inner band__inner--narrow">
+      <header class="band__head reveal">
+        <span class="band__num">04</span>
+        <h2 class="band__title band__title--sm">Was für Aufgaben übernimmt <span class="hl">Basti</span> und was ist seine Rolle?</h2>
+      </header>
+
+      <div class="basti2 reveal">
+        <p>Bastian Klaus ist unser Techniker und ist für diese und andere Webseiten verantwortlich.</p>
+        <p>Zudem kümmert er sich um Bots auf dem Discord-Server und die Moderation.</p>
+        <p>Er übernimmt auch die Abmoderation der Videos, auf dem gemeinsamen Youtube-Kanal.</p>
+        <p class="basti2__roles">Die Hauptrolle von Basti ist der COO und dazu auch die Nebenrollen CFO &amp; CTO &amp; CRO.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Abkürzungen ---------------------------------------------------------- -->
+  <section class="abbr2 reveal" aria-labelledby="abbr2-title">
+    <div class="abbr2__inner">
+      <h2 id="abbr2-title" class="abbr2__title">Abkürzungen</h2>
+      <dl class="abbr2__list">
+        <div class="abbr2__row"><dt>YT</dt><dd>YouTube</dd></div>
+        <div class="abbr2__row"><dt>DC</dt><dd>Discord</dd></div>
+        <div class="abbr2__row"><dt>CEO</dt><dd>Chief Executive Officer <span>(Gründer / Gesamtleiter)</span></dd></div>
+        <div class="abbr2__row"><dt>COO</dt><dd>Chief Operating Officer <span>(Mitgründer / operativer Leiter)</span></dd></div>
+        <div class="abbr2__row"><dt>CFO</dt><dd>Chief Financial Officer <span>(Finanzleiter / zuständig für Einnahmen &amp; Budgets)</span></dd></div>
+        <div class="abbr2__row"><dt>CTO</dt><dd>Chief Technology Officer <span>(Technischer Leiter / zuständig für Website &amp; Bots)</span></dd></div>
+        <div class="abbr2__row"><dt>CRO</dt><dd>Chief Revenue Officer <span>(Umsatzleiter / zuständig für Monetarisierung &amp; Partnerschaften)</span></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__col">
+        <p class="footer__brand"><span class="hl">MUDE</span></p>
+        <p class="footer__note">Marvel Universe Deutschland – ein Fan-Projekt im Aufbau.</p>
+      </div>
+
+      <div class="footer__col">
+        <h4>Social Media</h4>
+        <div class="footer__social">
+          <span class="social-dot" aria-hidden="true"></span>
+          <span class="social-dot" aria-hidden="true"></span>
+          <span class="social-dot" aria-hidden="true"></span>
+        </div>
+        <p class="footer__note">Kanäle folgen</p>
+      </div>
+
+      <div class="footer__col">
+        <h4>Links</h4>
+        <ul class="footer__links">
+          <li><a href="v2.html">Startseite</a></li>
+          <li><a href="v2.html#kontakt">Kontakt</a></li>
+          <li><a href="v2.html#kontakt">Impressum</a></li>
+          <li><a href="creator.html">Design V1</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="footer__copyright">© 2026 MUDE – Bastian Klaus &amp; LightningDart. Fan-Projekt, keine Verbindung zu Marvel oder Disney.</p>
+  </footer>
+
+  <script src="js/main-v2.js"></script>
+</body>
+</html>

@@ -1,0 +1,436 @@
+/* ==========================================================================
+   MUDE Web – Creator-Seite, Design V1 (Ergänzung zu style.css)
+   Wird IMMER nach style.css geladen. Hier steht nur, was diese Seite
+   zusätzlich braucht – Menü, Farben, Footer und Reveal kommen aus style.css.
+
+   Aufbau der Himmelzone von oben nach unten:
+     Sterne (hinter der Überschrift)  ->  Wolken  ->  Sonnenuntergang  ->  Dunkel
+   Das ist genau die Bildkomposition von middle-night.jpg, deshalb wird das
+   Bild hier über die volle Höhe der Zone gelegt statt beschnitten.
+   ========================================================================== */
+
+:root {
+  /* Höhe der Himmelzone. Die Marken darunter beziehen sich auf diesen Wert. */
+  --sky-h: 108svh;
+  /* Auf dieser Höhe der Zone liegt im Bild das orange Horizontband. */
+  --sky-horizon: 63%;
+}
+
+/* ==========================================================================
+   Himmelzone
+   ========================================================================== */
+
+.sky {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  min-height: var(--sky-h);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 22vh 20px 0;
+  padding-top: 22svh;
+  overflow: hidden;
+  background: #06080f;
+}
+
+/* Das Nachtbild über die volle Zonenhöhe. Absichtlich 100% x 100% statt
+   cover: nur so landet die Bildkomposition (Sterne oben, Horizont bei 63%,
+   dunkler Strand unten) maßstabsgetreu auf der Zone. Die Sterne werden dabei
+   minimal breiter – bei Punkten dieser Größe nicht sichtbar. */
+.sky__scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: #06080f;
+  background-image: url("../assets/images/middle-night.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+/* Wolken-Canvas. Liegt über dem Bild, aber unter dem Text. Die Wolken selbst
+   werden von js/clouds.js nur im Bereich zwischen Überschrift und Horizont
+   gezeichnet. */
+.sky__clouds {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Weicher Auslauf in den Seitenhintergrund – gleiches Prinzip wie
+   .hero::after in style.css, nur auf die Farben unterhalb des Horizonts
+   abgestimmt, damit keine Kante zum Inhalt entsteht. */
+.sky::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 32%;
+  z-index: 2;
+  background: linear-gradient(to bottom,
+      rgba(10, 9, 12, 0) 0%,
+      rgba(14, 11, 10, 0.6) 45%,
+      rgba(20, 15, 11, 0.9) 76%,
+      var(--bg-top) 100%);
+  pointer-events: none;
+}
+
+.sky__inner {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  max-width: 720px;
+}
+
+/* Dezenter Abdunkler direkt hinter dem Text. Sorgt dafür, dass Überschrift und
+   Untertitel auch dann klar lesbar bleiben, wenn eine helle Wolke
+   dahinterzieht. */
+.sky__inner::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 150%;
+  height: 300%;
+  background: radial-gradient(ellipse at center,
+      rgba(4, 6, 12, 0.72) 0%,
+      rgba(4, 6, 12, 0.42) 45%,
+      transparent 75%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.sky__title {
+  font-size: clamp(2.6rem, 9vw, 5.5rem);
+  letter-spacing: 0.06em;
+  margin: 0;
+  color: #fff8f0;
+  text-shadow: 0 4px 26px rgba(10, 12, 30, 0.9), 0 1px 3px rgba(0, 0, 0, 0.95);
+}
+
+.sky__subtitle {
+  margin: 0.6em 0 0;
+  font-size: clamp(0.95rem, 2.4vw, 1.2rem);
+  color: #e7dccf;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 14px rgba(6, 8, 20, 0.95);
+}
+
+/* Sprungmarken zu den drei Hauptpunkten. */
+.sky__jump {
+  margin-top: 2.2em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 12px;
+}
+
+.sky__jump a {
+  padding: 10px 18px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(255, 140, 26, 0.5);
+  border-radius: 999px;
+  background: rgba(12, 8, 4, 0.45);
+  color: var(--color-orange-light);
+  font-size: 0.9rem;
+  text-decoration: none;
+  backdrop-filter: blur(3px);
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+@media (hover: hover) {
+  .sky__jump a:hover {
+    background: rgba(255, 140, 26, 0.16);
+    border-color: var(--color-orange-light);
+    color: #fff0dc;
+  }
+}
+
+/* Aktueller Menüpunkt hebt sich ab. */
+.menu-link--current {
+  color: #fff0dc;
+  background: rgba(255, 140, 26, 0.12);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Abschnitte
+   ========================================================================== */
+
+/* Die Ziffer vor der Abschnittsüberschrift, etwas zurückgenommen. */
+.block-num {
+  color: var(--color-orange);
+  margin-right: 0.35em;
+  font-variant-numeric: tabular-nums;
+}
+
+.content-block h2 { scroll-margin-top: 24px; }
+
+/* Sätze, die im Original keine Frage sind, stehen als normaler Absatz da –
+   nur leicht abgesetzt, damit man sie nicht für eine Antwort hält. */
+.block-note {
+  margin: 1.6em 0 1.2em;
+  padding-left: 16px;
+  border-left: 2px solid rgba(255, 140, 26, 0.35);
+  color: var(--color-text-muted);
+}
+
+/* Frage / Antwort ------------------------------------------------------- */
+
+/* Natives <details>: funktioniert auch ohne JavaScript und ist mit der
+   Tastatur bedienbar. */
+.qa {
+  margin: 0 0 12px;
+  border: 1px solid rgba(255, 140, 26, 0.2);
+  border-radius: 10px;
+  background: rgba(12, 9, 14, 0.5);
+  overflow: hidden;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.qa > summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 18px;
+  min-height: 48px;
+  cursor: pointer;
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--color-red-glow);
+  list-style: none;
+  transition: color 0.18s ease;
+}
+
+/* Das Standard-Dreieck der Browser entfernen – wir zeichnen einen eigenen
+   Pfeil, damit er in beiden Engines gleich aussieht. */
+.qa > summary::-webkit-details-marker { display: none; }
+.qa > summary::marker { content: ""; }
+
+.qa > summary::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 0;
+  height: 0;
+  margin-top: 0.45em;
+  border-left: 7px solid currentColor;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  transform-origin: 25% 50%;
+  transition: transform 0.2s ease;
+}
+
+.qa[open] > summary::before { transform: rotate(90deg); }
+
+.qa[open] {
+  border-color: rgba(255, 140, 26, 0.42);
+  background: rgba(16, 12, 18, 0.66);
+}
+
+.qa[open] > summary { color: var(--color-orange-light); }
+
+@media (hover: hover) {
+  .qa:hover {
+    border-color: rgba(255, 140, 26, 0.45);
+    background: rgba(18, 13, 18, 0.62);
+  }
+  .qa > summary:hover { color: var(--color-orange-light); }
+}
+
+.qa > summary:focus-visible {
+  outline: 2px solid var(--color-orange-light);
+  outline-offset: -2px;
+}
+
+/* Die Antwort ist eingerückt und bekommt eine eigene Leiste – so ist auf
+   einen Blick klar, dass sie zur Frage darüber gehört. */
+.qa__answer {
+  padding: 0 18px 4px 34px;
+  margin-left: 12px;
+  border-left: 2px solid rgba(255, 140, 26, 0.4);
+}
+
+.qa__answer p:last-child { margin-bottom: 1em; }
+
+/* Discord: Satz links, Platzhalter für die Kanal-Bilder rechts ---------- */
+
+.with-shots {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  margin-bottom: 1.4em;
+}
+
+.with-shots > p { flex: 1 1 auto; margin: 0; }
+
+.shots {
+  flex: 0 0 132px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border: 1px dashed rgba(255, 140, 26, 0.35);
+  border-radius: 8px;
+  background: rgba(8, 6, 10, 0.5);
+}
+
+.shot {
+  display: block;
+  height: 16px;
+  border-radius: 3px;
+  background: repeating-linear-gradient(45deg,
+      rgba(255, 140, 26, 0.16) 0 6px,
+      rgba(255, 140, 26, 0.07) 6px 12px);
+}
+
+.shots__label {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(200, 182, 168, 0.75);
+}
+
+/* Abschnitt 4 – Basti, kompakter und in eigenem Kasten ------------------ */
+
+.content-block--basti { max-width: 620px; }
+
+.basti-box {
+  padding: 26px 26px 10px;
+  border: 1px solid rgba(255, 90, 66, 0.28);
+  border-radius: 14px;
+  background: linear-gradient(160deg,
+      rgba(30, 16, 12, 0.8) 0%,
+      rgba(12, 9, 12, 0.85) 100%);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+}
+
+.basti-box h2 {
+  font-size: 1.28rem;
+  line-height: 1.4;
+}
+
+.basti-roles {
+  margin-top: 1.2em;
+  padding-top: 1em;
+  border-top: 1px solid rgba(255, 140, 26, 0.2);
+  color: var(--color-orange-light);
+  font-weight: 700;
+}
+
+/* Abkürzungen ----------------------------------------------------------- */
+
+.abbr-box {
+  max-width: var(--content-max-width);
+  margin: 90px auto 0;
+  padding: 30px 28px 26px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  background: rgba(16, 16, 19, 0.88);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+}
+
+.abbr-box h2 {
+  margin: 0 0 1.1em;
+  font-size: 1.1rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.abbr-list { margin: 0; }
+
+.abbr-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 9px 0;
+}
+
+.abbr-row + .abbr-row { border-top: 1px solid rgba(255, 255, 255, 0.06); }
+
+.abbr-row dt {
+  flex: 0 0 54px;
+  font-weight: 700;
+  color: var(--color-orange-light);
+  letter-spacing: 0.06em;
+}
+
+.abbr-row dd {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.abbr-row dd span {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 700px) {
+  :root { --sky-h: 100svh; }
+
+  .sky {
+    padding-top: 18svh;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .sky::after { height: 28%; }
+  .sky__jump { margin-top: 1.8em; }
+  .sky__jump a { padding: 9px 15px; font-size: 0.85rem; }
+
+  .qa > summary { padding: 14px 15px; font-size: 1rem; }
+  .qa__answer { padding: 0 15px 4px 26px; margin-left: 9px; }
+
+  /* Platzhalter unter den Satz statt daneben – nebeneinander wird es hier
+     zu eng. */
+  .with-shots { flex-direction: column; gap: 14px; }
+  .shots { flex: 0 0 auto; align-self: stretch; }
+  .shot { height: 20px; }
+
+  .basti-box { padding: 22px 20px 8px; }
+  .abbr-box { margin-top: 70px; padding: 24px 20px 20px; }
+}
+
+@media (max-width: 480px) {
+  .sky { padding-top: 16svh; }
+  .sky__title {
+    font-size: clamp(2.2rem, 13vw, 3.4rem);
+    letter-spacing: 0.04em;
+  }
+  .sky__jump a { width: 100%; justify-content: center; }
+
+  .qa > summary { font-size: 0.98rem; gap: 10px; }
+  .qa__answer { padding-left: 20px; margin-left: 6px; }
+
+  .basti-box h2 { font-size: 1.14rem; }
+
+  /* Kürzel über die Erklärung statt daneben – sonst bleibt für den Text
+     kaum Breite übrig. */
+  .abbr-row { flex-direction: column; gap: 2px; }
+  .abbr-row dt { flex: 0 0 auto; }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  :root { --sky-h: 130svh; }
+  .sky { padding-top: 12svh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qa > summary::before { transition: none; }
+  .sky__clouds, .sandstorm { display: none; }
+}
