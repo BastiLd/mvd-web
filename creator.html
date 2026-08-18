@@ -15,6 +15,7 @@
 <body>
 
   <div class="night-backdrop" aria-hidden="true"></div>
+  <canvas id="night-life" class="night-life" aria-hidden="true"></canvas>
 
   <button id="menu-toggle" class="hamburger" aria-label="Menü öffnen" aria-expanded="false">
     <span></span><span></span><span></span>
@@ -57,7 +58,7 @@
     </section>
 
     <!-- 1. YOUTUBE ------------------------------------------------------- -->
-    <section class="content-block reveal" id="youtube">
+    <section class="content-block reveal" id="youtube" data-nav="YouTube" data-deco="play" data-deco-dark="true">
       <h2><span class="block-num">1.</span> YOUTUBE</h2>
 
       <p>Also ihr fragt euch wie das alles mit dem gemeinsamen Kanal funktioniert, dann lasst uns gleich loslegen.</p>
@@ -66,7 +67,6 @@
         <summary>Was soll auf dem gemeinsamen Kanal hochgeladen werden?</summary>
         <div class="qa__answer">
           <div class="qa__inner">
-            <p>Auf dem Kanal sollen News und Community Videos hochgeladen werden.</p>
             <p>Geplant sind Inhalte wie:</p>
             <ul class="tag-list">
               <li>News</li>
@@ -99,31 +99,21 @@
         </div>
       </details>
 
-      <p class="block-note">Es wird auch einmal im Monat ein gemeinsames News Video geben wo alle Bereiche genau behandelt und zusammengefasst werden.</p>
+      <p class="block-note">Man muss ab und zu in einem Video dabei sein.</p>
 
       <details class="qa">
         <summary>Was ist meine Aufgabe als Creator?</summary>
         <div class="qa__answer">
           <div class="qa__inner">
-            <p>Aktuell gibt es nur eine verbindliche Aufgabe, einmal im Monat beim News Video dabei sein.</p>
+            <p>Aktuell gibt es nur eine verbindliche Aufgabe, ab und zu auf dem Kanal präsent sein.</p>
           </div>
         </div>
       </details>
     </section>
 
     <!-- 2. DISCORD ------------------------------------------------------- -->
-    <section class="content-block reveal" id="discord">
+    <section class="content-block reveal" id="discord" data-nav="Discord" data-deco="bubble,spark" data-deco-dark="true">
       <h2><span class="block-num">2.</span> DISCORD</h2>
-
-      <div class="with-shots">
-        <p>Rechts seht ihr Bilder von den Kanälen die es auf dem gemeinsamen Discord-Server gibt.</p>
-        <div class="shots" aria-hidden="true">
-          <span class="shot"></span>
-          <span class="shot"></span>
-          <span class="shot"></span>
-          <span class="shots__label">Bilder folgen</span>
-        </div>
-      </div>
 
       <details class="qa">
         <summary>Wofür wird er genutzt?</summary>
@@ -148,11 +138,11 @@
     </section>
 
     <!-- 3. ZUGRIFF ------------------------------------------------------- -->
-    <section class="content-block reveal" id="zugriff">
+    <section class="content-block reveal" id="zugriff" data-nav="Zugriff" data-deco="key,shield" data-deco-dark="true">
       <h2><span class="block-num">3.</span> ZUGRIFF</h2>
 
       <details class="qa">
-        <summary>YT</summary>
+        <summary>YouTube</summary>
         <div class="qa__answer">
           <div class="qa__inner">
             <p>Der Zugriff auf den gemeinsamen YT-Kanal wird nicht an beteiligte Creator vergeben, sondern bleibt bei den 2 Administratoren/Managern, genauer gesagt dem CEO und COO/CFO.</p>
@@ -166,7 +156,7 @@
       </details>
 
       <details class="qa">
-        <summary>DC</summary>
+        <summary>Discord</summary>
         <div class="qa__answer">
           <div class="qa__inner">
             <p>Der Discord Zugriff wird so gehandhabt, dass jeder Creator sobald er offiziell Teil des Teams ist eine neue Rolle bekommt die „Team-Creator" heißt und über der normalen Creator-Rolle steht.</p>
@@ -177,12 +167,12 @@
     </section>
 
     <!-- 4. BASTI und die Abkürzungen stehen nebeneinander ----------------- -->
-    <section class="pair reveal" id="basti">
+    <section class="pair reveal" id="basti" data-nav="Basti" data-deco="gear,spark" data-deco-dark="true">
       <div class="basti-box">
         <h2><span class="block-num">4.</span> Was für Aufgaben übernimmt Basti und was ist seine Rolle?</h2>
         <p>Bastian Klaus ist unser Techniker und ist für diese und andere Webseiten verantwortlich.</p>
         <p>Zudem kümmert er sich um Bots auf dem Discord-Server und die Moderation.</p>
-        <p>Er übernimmt auch die Abmoderation der Videos, auf dem gemeinsamen Youtube-Kanal.</p>
+        <p>(Er übernimmt auch die Abmoderation der Videos, auf dem gemeinsamen Youtube-Kanal.) Ist noch Gesprächsthema.</p>
         <p class="basti-roles">Die Hauptrolle von Basti ist der COO und dazu auch die Nebenrollen CFO &amp; CTO &amp; CRO.</p>
       </div>
 
@@ -203,13 +193,7 @@
   </main>
 
   <footer class="site-footer">
-    <div class="dunes" aria-hidden="true">
-      <div class="dune dune--1"></div>
-      <div class="dune dune--2"></div>
-      <div class="dune dune--3"></div>
-      <div class="dune dune--4"></div>
-    </div>
-    <canvas id="sandstorm" class="sandstorm" aria-hidden="true"></canvas>
+    <canvas id="footer-scene" class="footer-scene" aria-hidden="true"></canvas>
     <div class="footer-inner">
       <div class="footer-social" aria-label="Plattformen">
         <span class="social-icon" title="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.5 15.6V8.4l6.3 3.6z"/></svg><span class="sr-only">YouTube</span></span>
@@ -231,7 +215,10 @@
 
   <script src="js/main.js"></script>
   <script src="js/qa.js"></script>
+  <script src="js/section-nav.js"></script>
   <script src="js/clouds.js"></script>
-  <script src="js/dust.js"></script>
+  <script src="js/night.js"></script>
+  <script src="js/deco.js"></script>
+  <script src="js/footer-scene.js"></script>
 </body>
 </html>

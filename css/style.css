@@ -258,12 +258,13 @@ main {
    Footer – Sand mit den eingeritzten Begriffen
    ========================================================================== */
 
-/* Dünenlandschaft aus vier langsam driftenden Ebenen. Jede Ebene ist eine
-   nahtlos kachelnde SVG-Grafik; animiert wird die Hintergrundposition um
-   exakt eine Kachelbreite, dadurch springt nichts. */
+/* Die ganze Landschaft steckt jetzt in einem einzigen Canvas
+   (js/footer-scene.js): Dünenreihen, Bewuchs, Treibsand und Sandhosen.
+   Vorher lagen hier gekachelte SVG-Ebenen und darunter ein deckender
+   Sockelbalken – der hat die Effekte am unteren Rand abgeschnitten. */
 .site-footer {
   position: relative;
-  min-height: 430px;
+  min-height: 460px;
   padding: 0 20px 30px;
   display: flex;
   align-items: flex-end;
@@ -271,90 +272,34 @@ main {
   overflow: hidden;
   background: linear-gradient(to bottom,
       var(--bg-bottom) 0%,
-      #2a1a0d 55%,
+      #2a1a0d 45%,
       #3b2613 100%);
 }
 
-/* Warmer Lichtschein hinter den Dünenkämmen – wie eine Sonne knapp darunter. */
-.site-footer::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 150px;
-  transform: translateX(-50%);
-  width: 90%;
-  height: 170px;
-  background: radial-gradient(ellipse at center,
-      rgba(224, 138, 43, 0.35) 0%,
-      rgba(160, 80, 25, 0.14) 45%,
-      transparent 72%);
-  filter: blur(14px);
-  pointer-events: none;
-}
-
-.dunes {
+.footer-scene {
   position: absolute;
   inset: 0;
-  pointer-events: none;
-}
-
-/* Die Ebene ist eine Kachelbreite breiter als der Footer und wandert um genau
-   eine Kachel. Weil sich der Hintergrund exakt in diesem Takt wiederholt, ist
-   der Sprung am Ende unsichtbar. Bewegt wird per transform statt per
-   background-position – das läuft auf der GPU und spart Repaints. */
-.dune {
-  --tile: 1200px;
-  --tile-h: 300px;
-  position: absolute;
-  left: 0;
-  width: calc(100% + var(--tile));
-  height: var(--tile-h);
-  background-repeat: repeat-x;
-  background-position: 0 bottom;
-  background-size: var(--tile) var(--tile-h);
-  animation: dune-drift var(--speed, 90s) linear infinite;
-  will-change: transform;
-}
-
-/* Hintere Reihen stehen höher und driften langsamer – dadurch entsteht
-   Tiefe, statt dass alle Reihen aufeinanderliegen. */
-.dune--1 { background-image: url("../assets/images/dune-1.svg"); --speed: 200s; bottom: 96px; }
-.dune--2 { background-image: url("../assets/images/dune-2.svg"); --speed: 150s; bottom: 62px; }
-.dune--3 { background-image: url("../assets/images/dune-3.svg"); --speed: 105s; bottom: 30px; }
-.dune--4 { background-image: url("../assets/images/dune-4.svg"); --speed:  72s; bottom: 0; }
-
-/* Gegenläufig, damit die Ebenen nicht im Gleichschritt wandern. */
-.dune--2, .dune--4 { animation-direction: reverse; }
-
-/* Treibsand über den Dünen (js/sandstorm.js). Liegt über den Dünenebenen,
-   aber unter dem Sockel und dem Text – die Fußzeile bleibt dadurch immer
-   klar lesbar. */
-.sandstorm {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
+  z-index: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
 }
 
-@keyframes dune-drift {
-  from { transform: translateX(0); }
-  to   { transform: translateX(calc(-1 * var(--tile))); }
-}
-
-/* Verlängert den Sockel der vordersten Dünenreihe nach oben. Gleiche Farbe wie
-   dune-4, deshalb entsteht keine sichtbare Kante – es sorgt nur dafür, dass
-   der Text nie auf einem hellen Dünenkamm landet. */
+/* Weicher dunkler Verlauf am Fuß des Footers. Ersetzt den früheren
+   deckenden Balken: die Fußzeile bleibt lesbar, aber Sand und Wirbel laufen
+   sichtbar dahinter bis zur Unterkante weiter. */
 .site-footer::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: var(--footer-base, 84px);
-  background: #5d4023;
+  height: 190px;
   z-index: 1;
+  background: linear-gradient(to bottom,
+      rgba(38, 24, 11, 0) 0%,
+      rgba(38, 24, 11, 0.55) 45%,
+      rgba(30, 19, 9, 0.82) 100%);
   pointer-events: none;
 }
 
@@ -463,12 +408,8 @@ main {
   .content-block, .intro-text { margin-bottom: 50px; }
   /* Kleinere Kachel, sonst sieht man auf dem Handy nur einen Ausschnitt
      einer einzigen Düne. */
-  .site-footer { min-height: 380px; --footer-base: 118px; }
-  .dune { --tile: 680px; --tile-h: 260px; }
-  .dune--1 { bottom: 78px; }
-  .dune--2 { bottom: 52px; }
-  .dune--3 { bottom: 26px; }
-  .site-footer::before { height: 200px; bottom: 130px; }
+  .site-footer { min-height: 400px; }
+  .site-footer::after { height: 150px; }
   .footer-links { gap: 15px; }
   .footer-social { gap: 9px; margin-bottom: 14px; }
   .social-icon { width: 34px; height: 34px; }
@@ -506,12 +447,10 @@ main {
     min-height: 100svh;
     padding-top: 8vh;
   }
-  .site-footer { min-height: 240px; }
+  .site-footer { min-height: 300px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { transition: none; }
-  .dune { animation: none; }
-  .sandstorm { display: none; }
 }

@@ -41,15 +41,30 @@
     </ul>
   </nav>
 
-  <section class="hero">
-    <div class="ph ph--hero" data-label="BILD FOLGT" aria-hidden="true"></div>
-    <div class="hero__inner">
-      <p class="hero__kicker">Fan-Projekt im Aufbau</p>
-      <h1 class="hero__title"><span class="hl">MVD</span></h1>
-      <p class="hero__lockup">Marvel vereinigt Deutschland</p>
-      <p class="hero__claim">Ein Netzwerk deutscher Marvel-Creator – eigenständig, aber gemeinsam stärker.</p>
-      <img class="hero__badge" src="assets/images/HAUPT.jpg" alt="MVD Creator Network – gemeinsame Kanäle auf YouTube, Twitch, TikTok, Instagram, Discord und X">
-      <a class="btn btn--red" href="creator-v2.html">Mehr erfahren</a>
+  <!-- Der Titel steht im Video selbst, deshalb gibt es hier keine
+       Überschrift mehr. Das Video ist quadratisch und wird vollständig
+       gezeigt (nicht beschnitten), damit der Schriftzug ganz sichtbar
+       bleibt; die Flächen daneben füllt der dunkle Sternengrund. -->
+  <section class="vhero">
+    <div class="vhero__space" aria-hidden="true"></div>
+
+    <div class="vhero__inner">
+      <div class="vhero__frame">
+        <video
+          class="vhero__video"
+          poster="assets/images/hero-video-poster.jpg"
+          preload="none"
+          autoplay muted loop playsinline
+          aria-label="MVD – Marvel vereinigt Deutschland"></video>
+      </div>
+
+      <p class="vhero__lockup">Marvel vereinigt Deutschland</p>
+      <p class="vhero__claim">Ein Netzwerk deutscher Marvel-Creator – eigenständig, aber gemeinsam stärker.</p>
+
+      <div class="vhero__actions">
+        <a class="btn btn--red" href="creator-v2.html">Für Creator</a>
+        <a class="btn btn--ghost" href="#idee">Die Idee</a>
+      </div>
     </div>
   </section>
 
@@ -190,5 +205,6 @@
   </footer>
 
   <script src="js/main-v2.js"></script>
+  <script src="js/hero-video.js"></script>
 </body>
 </html>
