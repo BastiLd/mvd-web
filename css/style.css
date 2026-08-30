@@ -249,6 +249,25 @@ main {
   margin-top: 1.5em;
 }
 
+/* Weiterführender Link im Fließtext. */
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--color-orange-light);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 180, 60, 0.45);
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+@media (hover: hover) {
+  .text-link:hover {
+    color: #fff0dc;
+    border-color: #fff0dc;
+  }
+}
+
 /* Sanftes Einblenden beim Scrollen ------------------------------------- */
 
 .reveal { transition: opacity 0.7s ease, transform 0.7s ease; }

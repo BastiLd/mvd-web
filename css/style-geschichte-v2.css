@@ -1,0 +1,663 @@
+/* ==========================================================================
+   MVD Web – Geschichte-Seite, Design V2 (Ergänzung zu style-v2.css)
+   Wird IMMER nach style-v2.css geladen.
+
+   Der Kopfbereich nutzt den .hero-Block aus style-v2.css. Neu ist vor allem
+   das Baum-Band: ein dunkler Vollbild-Bereich, in dem js/geschichte-tree-v2.js
+   den Weltenbaum in 3D zeichnet. Die drei Reiche liegen als normale HTML-
+   Karten darüber – sie sind auch dann da und lesbar, wenn kein 3D läuft.
+   ========================================================================== */
+
+:root {
+  --font-comic: "Bangers", "Anton", Impact, sans-serif;
+  --yg3-deep: #06110f;
+}
+
+/* ==========================================================================
+   Sprungmarken im Kopfbereich
+   ========================================================================== */
+
+.hero__jump {
+  margin-top: 0.6em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.hero__jump a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 10px 24px;
+  border: 2px solid #fff;
+  border-radius: 3px;
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #fff;
+  transition: transform 0.16s ease, background 0.16s ease, color 0.16s ease;
+}
+
+@media (hover: hover) {
+  .hero__jump a:hover {
+    background: var(--red);
+    border-color: var(--red);
+    transform: translateY(-2px);
+  }
+}
+
+.hero__jump a:active { transform: translateY(1px); }
+
+/* ==========================================================================
+   Bänder
+   ========================================================================== */
+
+.band {
+  position: relative;
+  padding: clamp(48px, 6.5vw, 82px) clamp(16px, 5vw, 40px);
+  overflow: hidden;
+  scroll-margin-top: var(--topbar-h);
+}
+
+.band--paper { background: var(--paper); }
+
+.band--ink {
+  background: var(--ink);
+  color: var(--text-on-dark);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1.1px);
+  background-size: 11px 11px;
+}
+
+/* Das Baum-Band trägt seinen Inhalt selbst über die volle Breite. */
+.band--tree {
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 30% 20%, rgba(56, 132, 106, 0.3) 0%, rgba(0, 0, 0, 0) 70%),
+    radial-gradient(ellipse 60% 45% at 74% 12%, rgba(124, 78, 172, 0.28) 0%, rgba(0, 0, 0, 0) 72%),
+    linear-gradient(175deg, #0a1c22 0%, var(--yg3-deep) 60%, #050f0c 100%);
+  color: var(--text-on-dark);
+}
+
+.band__inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--wrap);
+  margin: 0 auto;
+}
+
+.band__inner--narrow { max-width: 860px; }
+
+.band__head {
+  text-align: left;
+  margin-bottom: clamp(26px, 3.4vw, 42px);
+}
+
+.band__num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 7vw, 4.4rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--num-stroke, var(--ink));
+  opacity: 0.3;
+}
+
+.band--ink,
+.band--tree { --num-stroke: #fff; }
+
+.band__title {
+  font-family: var(--font-comic);
+  font-size: clamp(2.4rem, 8vw, 5rem);
+  letter-spacing: 0.03em;
+  line-height: 1.02;
+  margin: 0.06em 0 0;
+}
+
+.band__lead {
+  margin: 1.1em 0 0;
+  max-width: 62ch;
+  font-size: clamp(1.02rem, 2vw, 1.16rem);
+}
+
+.band--ink .band__lead,
+.band--tree .band__lead { color: var(--text-on-dark-muted); }
+
+.band__text {
+  max-width: 68ch;
+  font-size: clamp(1rem, 1.9vw, 1.1rem);
+}
+
+.band__note {
+  max-width: 68ch;
+  margin: 26px 0;
+  padding: 16px 20px;
+  border-left: 4px solid var(--red);
+  background: rgba(226, 35, 26, 0.06);
+  font-size: 0.98rem;
+}
+
+.band--ink .band__note { background: rgba(255, 255, 255, 0.05); }
+
+/* Der Satz, in dem der Name MVD zum ersten Mal fiel. */
+.band__quote {
+  margin: 30px 0;
+  padding: 0 0 0 22px;
+  border-left: 4px solid var(--red);
+  font-family: var(--font-comic);
+  font-size: clamp(1.5rem, 4vw, 2.4rem);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+.band__mark {
+  position: absolute;
+  right: -0.06em;
+  bottom: -0.22em;
+  z-index: 0;
+  font-family: var(--font-comic);
+  font-size: clamp(6rem, 19vw, 17rem);
+  line-height: 0.8;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--ink);
+  opacity: 0.05;
+  pointer-events: none;
+  user-select: none;
+}
+
+.band--ink .band__mark {
+  -webkit-text-stroke-color: #fff;
+  opacity: 0.06;
+}
+
+/* Fortschrittsbalken – Breite aus --band-progress (js/section-nav.js). */
+.band::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--band-progress, 0.25) * 100%);
+  height: 8px;
+  background: var(--red);
+  transform: skewX(-32deg);
+  transform-origin: top left;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.band::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: rgba(226, 35, 26, 0.14);
+  transform: skewX(-32deg);
+  transform-origin: top left;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   Baum-Bühne
+   ========================================================================== */
+
+.yg3-intro {
+  padding: 0 clamp(16px, 5vw, 40px);
+  margin-bottom: clamp(20px, 3vw, 34px);
+}
+
+/* Höhe des Bereichs, durch den gescrollt wird: ein Bildschirm zum Ankommen
+   plus einer je Reich. Im einfachen Modus wird sie auf auto gesetzt. */
+.yg3-track {
+  position: relative;
+  height: 400vh;
+  height: 400svh;
+}
+
+.yg3-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.yg3-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+/* Kurze Meldung, solange 3D lädt. */
+.yg3-status {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 10px 18px;
+  border-radius: 3px;
+  background: rgba(6, 17, 15, 0.75);
+  color: var(--text-on-dark-muted);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.yg3-viewport {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* flex-shrink auf 0: sonst würde der Streifen wieder auf Sichtfensterbreite
+   zusammengedrückt und alle drei Reiche stünden nebeneinander. */
+.yg3-strip {
+  display: flex;
+  flex: 0 0 300%;
+  height: 100%;
+  align-items: center;
+  will-change: transform;
+}
+
+.yg3-realm {
+  flex: 0 0 33.3333%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 clamp(16px, 5vw, 40px);
+  transition: opacity 0.4s ease;
+}
+
+/* Die Karte steht rechts, damit der Baum links im Bild frei bleibt. */
+.yg3-realm__card {
+  width: min(560px, 100%);
+  max-height: 86vh;
+  max-height: 86svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(20px, 2.6vw, 30px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 5px solid var(--realm-tint, #4ade80);
+  background: rgba(6, 17, 15, 0.82);
+  backdrop-filter: blur(6px);
+}
+
+.yg3-realm__head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.yg3-realm__sigil {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border: 2px solid var(--realm-tint, #4ade80);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--realm-tint, #4ade80);
+  font-family: var(--font-comic);
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.yg3-realm__photo {
+  flex: 0 0 auto;
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border: 2px solid var(--realm-tint, #4ade80);
+}
+
+.yg3-realm__name {
+  margin: 0;
+  font-family: var(--font-comic);
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  letter-spacing: 0.03em;
+  color: #fff;
+}
+
+.yg3-realm__role {
+  margin: 0.1em 0 0;
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--realm-tint, #4ade80);
+}
+
+.yg3-realm__channel {
+  display: inline-block;
+  margin-top: 0.5em;
+  font-size: 0.9rem;
+  color: var(--text-on-dark-muted);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@media (hover: hover) {
+  .yg3-realm__channel:hover { color: #fff; border-color: #fff; }
+}
+
+.yg3-realm__bio {
+  margin: 0 0 20px;
+  color: var(--text-on-dark);
+  font-size: 0.98rem;
+}
+
+/* Videos ------------------------------------------------------------------ */
+
+.yg3-videos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.yg3-videos a {
+  display: block;
+  height: 100%;
+  padding-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  text-decoration: none;
+  transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+}
+
+.yg3-videos img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+  margin-bottom: 8px;
+  background: #0b1a16;
+}
+
+.yg3-videos__note {
+  display: block;
+  padding: 0 10px;
+  margin-bottom: 3px;
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--realm-tint, #4ade80);
+}
+
+.yg3-videos__title {
+  display: block;
+  padding: 0 10px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+@media (hover: hover) {
+  .yg3-videos a:hover {
+    border-color: var(--realm-tint, #4ade80);
+    background: rgba(255, 255, 255, 0.09);
+    transform: translateY(-3px);
+  }
+}
+
+.yg3-videos a:focus-visible {
+  outline: 2px solid var(--realm-tint, #4ade80);
+  outline-offset: 2px;
+}
+
+/* Punkte, die zeigen, an welcher Wurzel man gerade ist. */
+.yg3-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  z-index: 2;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.yg3-dots button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.yg3-dots button::before {
+  content: "";
+  width: 26px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  transform: skewX(-32deg);
+  transition: background 0.25s ease, width 0.25s ease;
+}
+
+.yg3-dots button.is-active::before {
+  width: 44px;
+  background: var(--red);
+}
+
+.yg3-dots button:focus-visible { outline: 2px solid var(--red); }
+
+/* ==========================================================================
+   Deko-Ebene und Sprungmarken
+   ========================================================================== */
+
+.deco {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.secnav {
+  position: fixed;
+  right: calc(14px + env(safe-area-inset-right, 0px));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 80;
+}
+
+.secnav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.secnav__link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 8px 4px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Heller Schatten, damit die Striche auf hellen wie dunklen Bändern tragen. */
+.secnav__dash {
+  display: block;
+  width: 28px;
+  height: 3px;
+  background: rgba(20, 20, 26, 0.28);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+  transition: width 0.22s ease, background 0.22s ease;
+}
+
+.secnav__label {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 5px 10px;
+  color: #fff;
+  background: var(--ink);
+  border-radius: 2px;
+  opacity: 0;
+  transform: translateX(8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.secnav__link.is-active .secnav__dash {
+  width: 48px;
+  background: var(--red);
+}
+
+@media (hover: hover) {
+  .secnav__link:hover .secnav__dash { width: 48px; background: var(--red); }
+  .secnav__link:hover .secnav__label { opacity: 1; transform: translateX(0); }
+}
+
+.secnav__link:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+.secnav__link:focus-visible .secnav__label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ==========================================================================
+   Einfache Fassung
+   Greift auf schmalen Schirmen, ohne JavaScript, ohne WebGL und bei
+   reduzierter Bewegung: kein Kleben, kein seitliches Wandern – die drei
+   Reiche stehen untereinander. Das 3D-Bild kann dabei trotzdem als ruhiger
+   Hintergrund weiterlaufen, wenn das Gerät es hergibt.
+   ========================================================================== */
+
+.yg3-track--plain { height: auto; }
+
+.yg3-track--plain .yg3-stage {
+  position: static;
+  height: auto;
+  padding: 6vh 0 8vh;
+}
+
+.yg3-track--plain .yg3-canvas { position: fixed; }
+
+.yg3-track--plain .yg3-viewport { height: auto; overflow: visible; }
+
+.yg3-track--plain .yg3-strip {
+  flex: 1 1 auto;
+  flex-direction: column;
+  height: auto;
+  transform: none !important;
+  gap: 40px;
+}
+
+.yg3-track--plain .yg3-realm {
+  flex: 0 0 auto;
+  justify-content: center;
+  opacity: 1 !important;
+}
+
+.yg3-track--plain .yg3-realm__card {
+  width: min(720px, 100%);
+  max-height: none;
+  overflow: visible;
+}
+
+/* Ohne JavaScript gilt dasselbe. */
+html:not(.js) .yg3-track { height: auto; }
+
+html:not(.js) .yg3-stage { position: static; height: auto; padding: 6vh 0 8vh; }
+
+html:not(.js) .yg3-viewport { height: auto; overflow: visible; }
+
+html:not(.js) .yg3-strip {
+  flex: 1 1 auto;
+  flex-direction: column;
+  height: auto;
+  gap: 40px;
+}
+
+html:not(.js) .yg3-realm { flex: 0 0 auto; justify-content: center; }
+
+html:not(.js) .yg3-realm__card {
+  width: min(720px, 100%);
+  max-height: none;
+  overflow: visible;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .yg3-videos { grid-template-columns: 1fr 1fr; }
+  .yg3-videos li:nth-child(3) { grid-column: 1 / -1; }
+}
+
+@media (max-width: 780px) {
+  .hero { min-height: 76svh; }
+
+  .yg3-realm { padding: 0 clamp(14px, 4vw, 24px); }
+
+  .secnav { right: calc(6px + env(safe-area-inset-right, 0px)); }
+  .secnav__dash { width: 18px; }
+  .secnav__link.is-active .secnav__dash { width: 32px; }
+  .secnav__label { display: none; }
+
+  .band::after, .band::before { height: 6px; }
+}
+
+@media (max-width: 480px) {
+  .hero__jump { flex-direction: column; }
+  .hero__jump a { width: 100%; justify-content: center; }
+
+  .band__mark { font-size: clamp(4.5rem, 26vw, 8rem); }
+
+  .yg3-videos { grid-template-columns: 1fr; }
+  .yg3-videos li:nth-child(3) { grid-column: auto; }
+
+  .yg3-realm__sigil,
+  .yg3-realm__photo { width: 60px; height: 60px; }
+  .yg3-realm__sigil { font-size: 1.8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yg3-realm { transition: none; }
+  .yg3-videos a { transition: none; }
+  .hero__jump a { transition: none; }
+}

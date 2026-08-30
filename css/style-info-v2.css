@@ -1,0 +1,492 @@
+/* ==========================================================================
+   MVD Web – Info-Seite, Design V2 (Ergänzung zu style-v2.css)
+   Wird IMMER nach style-v2.css geladen. Topbar, Menü, Buttons, Footer und
+   Reveal kommen von dort.
+
+   Der Kopfbereich nutzt den .hero-Block aus style-v2.css, der dort schon
+   fertig steht: die Startseite verwendet .vhero (Video), die Creator-Seite
+   .chero (gezeichneter Comic-Himmel) – .hero selbst war bislang ungenutzt
+   und passt genau auf eine schlichte Unterseite.
+   ========================================================================== */
+
+:root {
+  --font-comic: "Bangers", "Anton", Impact, sans-serif;
+}
+
+/* ==========================================================================
+   Sprungmarken im Kopfbereich
+   ========================================================================== */
+
+.hero__jump {
+  margin-top: 0.6em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.hero__jump a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 10px 24px;
+  border: 2px solid #fff;
+  border-radius: 3px;
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #fff;
+  transition: transform 0.16s ease, background 0.16s ease, color 0.16s ease;
+}
+
+@media (hover: hover) {
+  .hero__jump a:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+}
+
+.hero__jump a:active { transform: translateY(1px); }
+
+/* ==========================================================================
+   Bereiche – jeder Hauptpunkt bekommt ein eigenes, volles Seitenband
+   ========================================================================== */
+
+.band {
+  position: relative;
+  padding: clamp(48px, 6.5vw, 82px) clamp(16px, 5vw, 40px);
+  overflow: hidden;
+  scroll-margin-top: var(--topbar-h);
+}
+
+.band--paper { background: var(--paper); }
+
+.band--ink {
+  background: var(--ink);
+  color: var(--text-on-dark);
+}
+
+/* Feiner Rasterschleier auf den dunklen Bändern, damit sie nicht flach
+   wirken. Liegt auf dem Bereich selbst als Hintergrundbild, weil ::before
+   und ::after schon den Fortschrittsbalken tragen. */
+.band--ink {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1.1px);
+  background-size: 11px 11px;
+}
+
+.band__inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--wrap);
+  margin: 0 auto;
+}
+
+/* Kopf des Bereichs – bewusst linksbündig. */
+.band__head {
+  text-align: left;
+  margin-bottom: clamp(26px, 3.4vw, 42px);
+}
+
+/* Nur als Kontur gesetzt. Die Strichfarbe muss explizit stehen: mit
+   currentColor würde sie zusammen mit dem transparenten Text verschwinden. */
+.band__num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 7vw, 4.4rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--num-stroke, var(--ink));
+  opacity: 0.3;
+}
+
+.band--ink { --num-stroke: #fff; }
+
+.band__title {
+  font-family: var(--font-comic);
+  font-size: clamp(2.4rem, 8vw, 5rem);
+  letter-spacing: 0.03em;
+  line-height: 1.02;
+  margin: 0.06em 0 0;
+}
+
+.band__lead {
+  margin: 1.1em 0 0;
+  max-width: 62ch;
+  font-size: clamp(1.02rem, 2vw, 1.16rem);
+}
+
+.band--ink .band__lead { color: var(--text-on-dark-muted); }
+
+/* ==========================================================================
+   Frage / Antwort
+   Frage mittig und in anderer Schrift als die Antwort, Antwort linksbündig.
+   ========================================================================== */
+
+.qa-list {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.qa2 {
+  border-top: 1px solid rgba(20, 20, 26, 0.14);
+  transition: background 0.18s ease;
+}
+
+.qa2:last-of-type { border-bottom: 1px solid rgba(20, 20, 26, 0.14); }
+
+.band--ink .qa2 { border-color: rgba(255, 255, 255, 0.16); }
+
+.qa2 > summary {
+  position: relative;
+  display: block;
+  padding: 22px 52px;
+  min-height: 48px;
+  cursor: pointer;
+  list-style: none;
+  /* Andere Ebene als die Antwort: gesperrte Barlow-Halbfette statt
+     normalem Fließtext. */
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: clamp(0.92rem, 1.7vw, 1.02rem);
+  letter-spacing: 0.055em;
+  line-height: 1.5;
+  text-align: center;
+  text-transform: uppercase;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.qa2 > summary::-webkit-details-marker { display: none; }
+.qa2 > summary::marker { content: ""; }
+
+/* Plus, das beim Öffnen zum Minus wird. */
+.qa2 > summary::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  width: 15px;
+  height: 15px;
+  margin-top: -7px;
+  background:
+    linear-gradient(var(--red), var(--red)) center/100% 3px no-repeat,
+    linear-gradient(var(--red), var(--red)) center/3px 100% no-repeat;
+  transition: background-size 0.22s ease;
+}
+
+/* Aus dem Plus wird ein Minus: nur der senkrechte Strich verschwindet. */
+.qa2[open] > summary::after { background-size: 100% 3px, 3px 0; }
+
+.qa2[open] > summary { color: var(--red); }
+
+@media (hover: hover) {
+  .qa2:hover { background: rgba(226, 35, 26, 0.05); }
+  .qa2 > summary:hover { color: var(--red); transform: translateY(-1px); }
+  .band--ink .qa2:hover { background: rgba(255, 255, 255, 0.05); }
+}
+
+.qa2 > summary:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: -3px;
+}
+
+/* Der Abstand sitzt auf dem inneren Container, damit die Höhe wirklich auf 0
+   gehen kann – sonst bliebe im zugeklappten Zustand ein Spalt stehen. */
+.qa2__answer {
+  padding: 0;
+  text-align: left;
+}
+
+.qa2__inner {
+  max-width: 68ch;
+  margin: 0 auto;
+  padding: 2px 4px 26px;
+}
+
+.qa2__inner > :last-child { margin-bottom: 0; }
+
+/* Nur wenn js/qa.js läuft, wird die Höhe animiert. */
+.qa--js > .qa2__answer {
+  overflow: hidden;
+  transition: height 0.28s ease;
+}
+
+.band--ink .qa2__answer { color: var(--text-on-dark); }
+
+/* ==========================================================================
+   Aufzählungen und Hinweise
+   ========================================================================== */
+
+.tag-list {
+  list-style: none;
+  margin: 0 0 1em;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-list li {
+  padding: 6px 14px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.86rem;
+  letter-spacing: 0.03em;
+}
+
+.band--ink .tag-list li { color: var(--text-on-dark); }
+
+.info-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 1.5em 0 0;
+  padding: 13px 15px;
+  border-left: 4px solid var(--red);
+  background: rgba(226, 35, 26, 0.07);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.band--ink .info-note {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-on-dark-muted);
+}
+
+.info-note strong { color: var(--red); }
+
+.info-note__mark {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border-radius: 50%;
+  border: 1.5px solid var(--red);
+  color: var(--red);
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 15px;
+  text-align: center;
+}
+
+/* ==========================================================================
+   Deko: großes, sehr blasses Wort hinter jedem Bereich
+   ========================================================================== */
+
+.band__mark {
+  position: absolute;
+  right: -0.06em;
+  bottom: -0.22em;
+  z-index: 0;
+  font-family: var(--font-comic);
+  font-size: clamp(6rem, 19vw, 17rem);
+  line-height: 0.8;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--ink);
+  opacity: 0.05;
+  pointer-events: none;
+  user-select: none;
+}
+
+.band--ink .band__mark {
+  -webkit-text-stroke-color: #fff;
+  opacity: 0.06;
+}
+
+/* Rotes Band am oberen Rand, das zugleich den Fortschritt zeigt. Die Breite
+   kommt aus --band-progress, gesetzt von js/section-nav.js – beim Hinzufügen
+   eines Bereichs rechnet das Skript neu, hier steht keine feste Anzahl. */
+.band::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--band-progress, 0.25) * 100%);
+  height: 8px;
+  background: var(--red);
+  transform: skewX(-32deg);
+  transform-origin: top left;
+  /* Bewusst ohne transition: die Breite steht beim Laden fest. */
+  pointer-events: none;
+}
+
+/* Der Rest des Balkens bleibt als blasse Spur stehen. */
+.band::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: rgba(226, 35, 26, 0.14);
+  transform: skewX(-32deg);
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Deko-Ebene je Bereich (js/deco.js)
+   ========================================================================== */
+
+.deco {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Sprungmarken rechts (js/section-nav.js)
+   ========================================================================== */
+
+.secnav {
+  position: fixed;
+  right: calc(14px + env(safe-area-inset-right, 0px));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 80;
+}
+
+.secnav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.secnav__link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 8px 4px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Auf den dunklen Bändern würden schwarze Striche verschwinden. Die Farbe
+   wird beim Scrollen nicht umgeschaltet – stattdessen tragen die Striche
+   einen hellen Schatten, der auf beiden Gründen funktioniert. */
+.secnav__dash {
+  display: block;
+  width: 28px;
+  height: 3px;
+  background: rgba(20, 20, 26, 0.28);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+  transition: width 0.22s ease, background 0.22s ease;
+}
+
+.secnav__label {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 5px 10px;
+  color: #fff;
+  background: var(--ink);
+  border-radius: 2px;
+  opacity: 0;
+  transform: translateX(8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.secnav__link.is-active .secnav__dash {
+  width: 48px;
+  background: var(--red);
+}
+
+@media (hover: hover) {
+  .secnav__link:hover .secnav__dash { width: 48px; background: var(--red); }
+  .secnav__link:hover .secnav__label { opacity: 1; transform: translateX(0); }
+}
+
+.secnav__link:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+.secnav__link:focus-visible .secnav__label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ==========================================================================
+   Ab Tablet zweispaltig: Bereichskopf links, Fragen rechts daneben
+   ========================================================================== */
+
+@media (min-width: 900px) {
+  .band--qa .band__inner {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.78fr) 1.22fr;
+    gap: clamp(34px, 4.5vw, 70px);
+    align-items: start;
+  }
+
+  .band--qa .band__head {
+    position: sticky;
+    top: calc(var(--topbar-h) + 26px);
+    margin-bottom: 0;
+  }
+
+  .qa-list { max-width: none; }
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 780px) {
+  .hero { min-height: 76svh; }
+
+  .qa2 > summary { padding: 20px 44px; }
+  .qa2__inner { padding: 2px 2px 24px; }
+
+  /* Auf dem Handy nur die Striche, ohne Namen – der Platz reicht sonst
+     nicht und Hover gibt es dort ohnehin nicht. */
+  .secnav { right: calc(6px + env(safe-area-inset-right, 0px)); }
+  .secnav__dash { width: 18px; }
+  .secnav__link.is-active .secnav__dash { width: 32px; }
+  .secnav__label { display: none; }
+
+  .band::after, .band::before { height: 6px; }
+}
+
+@media (max-width: 480px) {
+  .hero__jump { flex-direction: column; }
+  .hero__jump a { width: 100%; justify-content: center; }
+
+  .band__mark { font-size: clamp(4.5rem, 26vw, 8rem); }
+
+  .qa2 > summary {
+    padding: 18px 40px 18px 12px;
+    letter-spacing: 0.04em;
+  }
+  .qa2 > summary::after { right: 10px; }
+  .qa2__inner { padding: 2px 0 22px; }
+
+  .tag-list li { font-size: 0.82rem; padding: 5px 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qa--js > .qa2__answer { transition: none; }
+  .qa2 > summary,
+  .qa2 > summary::after,
+  .hero__jump a { transition: none; }
+}

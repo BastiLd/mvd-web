@@ -1,0 +1,723 @@
+/* ==========================================================================
+   MVD Web – Geschichte-Seite, Design V1 (Ergänzung zu style.css)
+   Wird IMMER nach style.css geladen.
+
+   Die Seite behält die warme, dunkle Handschrift der V1-Seiten. Nur der
+   Baum-Bereich bricht bewusst aus: ein tiefes, kühles Grün-Violett, damit
+   Yggdrasil als eigener Ort wirkt und nicht als weiterer Textblock.
+
+   Baum-Mechanik: .yg-track ist hoch, .yg-stage darin klebt am oberen Rand
+   (sticky). Beim Durchscrollen des Tracks wandert der Streifen darin
+   seitlich. Es wird kein Scroll-Ereignis abgefangen – das Scrollen bleibt
+   das des Browsers. Auf schmalen Schirmen und bei reduzierter Bewegung
+   greift die Mechanik gar nicht erst, dann stehen die drei Reiche einfach
+   untereinander.
+   ========================================================================== */
+
+:root {
+  --yg-deep: #061410;
+  --yg-green: #7ce8a4;
+  --yg-violet: #cfa8ff;
+}
+
+/* ==========================================================================
+   Kopfbereich
+   ========================================================================== */
+
+.yg-hero {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 82vh;
+  min-height: 82svh;
+  padding: 18vh 20px 8vh;
+  padding-top: 18svh;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Schimmer in Baumfarben – kündigt an, worum es weiter unten geht. */
+.yg-hero::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  width: min(900px, 130%);
+  height: 560px;
+  transform: translate(-50%, -30%);
+  background: radial-gradient(ellipse at center,
+      rgba(124, 232, 164, 0.14) 0%,
+      rgba(207, 168, 255, 0.09) 40%,
+      rgba(0, 0, 0, 0) 72%);
+  pointer-events: none;
+}
+
+/* Weicher Auslauf nach unten, damit keine Kante zum Textbereich entsteht. */
+.yg-hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 38%;
+  background: linear-gradient(to bottom,
+      rgba(26, 18, 11, 0) 0%,
+      rgba(26, 18, 11, 0.55) 52%,
+      var(--bg-top) 100%);
+  pointer-events: none;
+}
+
+.yg-hero__motes {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.yg-hero__inner {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+}
+
+.yg-hero__kicker {
+  margin: 0 0 1.4em;
+  font-size: 0.82rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--yg-green);
+}
+
+.yg-hero__title {
+  margin: 0;
+  font-size: clamp(2.4rem, 8vw, 4.6rem);
+  line-height: 1.12;
+  letter-spacing: 0.03em;
+  color: #fff8f0;
+  text-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.9),
+    0 0 60px rgba(124, 232, 164, 0.22);
+}
+
+.yg-hero__subtitle {
+  margin: 1.1em auto 0;
+  max-width: 34em;
+  font-size: clamp(0.98rem, 2.2vw, 1.18rem);
+  color: #e7dccf;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+.yg-hero__scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2.4em;
+  padding: 12px 22px;
+  min-height: 46px;
+  border: 1px solid rgba(124, 232, 164, 0.45);
+  border-radius: 999px;
+  background: rgba(6, 20, 16, 0.45);
+  color: var(--yg-green);
+  font-size: 0.9rem;
+  text-decoration: none;
+  backdrop-filter: blur(3px);
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.yg-hero__scroll::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-top: 7px solid currentColor;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+}
+
+@media (hover: hover) {
+  .yg-hero__scroll:hover {
+    background: rgba(124, 232, 164, 0.16);
+    border-color: var(--yg-green);
+    color: #eafff3;
+  }
+}
+
+/* ==========================================================================
+   Erzählabschnitte
+   ========================================================================== */
+
+.block-num {
+  color: var(--color-orange);
+  margin-right: 0.35em;
+  font-variant-numeric: tabular-nums;
+}
+
+.content-block h2 { scroll-margin-top: 24px; }
+
+main { padding-top: 46px; padding-bottom: 80px; }
+
+.content-block { margin-bottom: 56px; }
+
+/* Der Satz, der in dem Gespräch fiel, aus dem MVD entstand. */
+.yg-quote {
+  margin: 1.6em 0;
+  padding: 18px 22px;
+  border-left: 3px solid var(--yg-green);
+  background: rgba(124, 232, 164, 0.07);
+  font-size: 1.14rem;
+  font-style: italic;
+  color: #eafff3;
+}
+
+/* ==========================================================================
+   Deko-Ebene (js/deco.js) und Fortschrittsbalken (js/section-nav.js)
+   ========================================================================== */
+
+.deco {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.content-block,
+.yg-section { position: relative; }
+
+.content-block > *:not(.deco) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Die Breite kommt aus --band-progress, gesetzt von js/section-nav.js. */
+.content-block::before,
+.yg-section::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -14px;
+  height: 3px;
+  width: min(calc(var(--band-progress, 0) * var(--content-max-width)), 100%);
+  background: linear-gradient(90deg, var(--color-orange), var(--color-red-glow));
+  border-radius: 2px;
+  box-shadow: 0 0 14px rgba(255, 90, 66, 0.45);
+  pointer-events: none;
+}
+
+/* Der Baum-Bereich läuft über die volle Breite – dort bezieht sich der
+   Balken auf die Textspalte, damit der Maßstab derselbe bleibt. */
+.yg-section::before {
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: var(--content-max-width);
+}
+
+/* ==========================================================================
+   Baum-Bereich
+   ========================================================================== */
+
+/* Volle Seitenbreite, obwohl main einen Innenabstand hat. */
+.yg-section {
+  margin: 0 calc(50% - 50vw) 56px;
+  width: 100vw;
+  padding: 0 0 10px;
+}
+
+.yg-intro {
+  max-width: var(--content-max-width);
+  margin: 0 auto 26px;
+  padding: 0 20px;
+}
+
+.yg-intro h2 {
+  font-size: 1.5rem;
+  color: var(--color-red-glow);
+}
+
+/* Der hohe Bereich, durch den gescrollt wird. Die Höhe bestimmt, wie lange
+   die Bühne stehen bleibt: ein Bildschirm zum Ankommen plus einer je Reich.
+   Ohne JavaScript oder auf schmalen Schirmen wird sie unten wieder auf auto
+   gesetzt – dann gibt es kein Kleben und nichts wandert. */
+.yg-track {
+  position: relative;
+  height: 400vh;
+  height: 400svh;
+}
+
+.yg-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.8fr) 1.2fr;
+  /* Eine Zeile über die volle Höhe. Ohne diese Angabe wäre die Zeilenhöhe
+     inhaltsabhängig, und die Höhenangaben der Spalten in Prozent hätten
+     keinen Bezugswert – das SVG würde dann auf seine Eigenhöhe wachsen und
+     unten abgeschnitten. */
+  grid-template-rows: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 60% at 22% 40%, rgba(51, 120, 96, 0.35) 0%, rgba(0, 0, 0, 0) 70%),
+    radial-gradient(ellipse 70% 50% at 70% 18%, rgba(120, 74, 168, 0.3) 0%, rgba(0, 0, 0, 0) 72%),
+    linear-gradient(170deg, #0a1c22 0%, var(--yg-deep) 55%, #04100c 100%);
+}
+
+.yg-motes {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Der Baum ---------------------------------------------------------------- */
+
+.yg-tree {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3vh 0 3vh 2vw;
+}
+
+.yg-tree svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Die drei Wurzeln liegen normalerweise gedämpft da. Die zum aktuellen Reich
+   gehörende wird von js/geschichte-tree-v1.js hell geschaltet – die Farbe
+   kommt aus --realm-tint des jeweiligen Reichs. */
+.yg-root {
+  stroke: #1f7f5c;
+  stroke-opacity: 0.45;
+  transition: stroke 0.5s ease, stroke-opacity 0.5s ease, filter 0.5s ease;
+}
+
+.yg-root.is-active {
+  stroke: var(--root-tint, var(--yg-green));
+  stroke-opacity: 1;
+  filter: drop-shadow(0 0 10px var(--root-tint, var(--yg-green)));
+}
+
+/* Die Reiche -------------------------------------------------------------- */
+
+.yg-viewport {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* flex-shrink muss auf 0: als Flex-Element würde der Streifen sonst wieder
+   auf die Breite des Sichtfensters zusammengedrückt und alle drei Reiche
+   stünden gleichzeitig nebeneinander. */
+.yg-strip {
+  display: flex;
+  flex: 0 0 300%;
+  will-change: transform;
+}
+
+.yg-realm {
+  flex: 0 0 33.3333%;
+  padding: 4vh clamp(20px, 3.5vw, 44px) 4vh 0;
+  max-height: 92vh;
+  max-height: 92svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition: opacity 0.4s ease;
+}
+
+.yg-realm__head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+/* Emblem statt Foto – von Mittelkap und Basti gibt es kein Bild. */
+.yg-realm__sigil {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 2px solid var(--realm-tint, var(--yg-green));
+  background: radial-gradient(circle at 50% 40%,
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(6, 20, 16, 0.9) 68%);
+  color: var(--realm-tint, var(--yg-green));
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 0 0 26px -4px var(--realm-tint, var(--yg-green));
+}
+
+.yg-realm__photo {
+  flex: 0 0 auto;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--realm-tint, var(--yg-green));
+  box-shadow: 0 0 26px -4px var(--realm-tint, var(--yg-green));
+}
+
+.yg-realm__name {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  letter-spacing: 0.03em;
+  color: #fff8f0;
+}
+
+.yg-realm__role {
+  margin: 0.25em 0 0;
+  font-size: 0.86rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--realm-tint, var(--yg-green));
+}
+
+.yg-realm__channel {
+  display: inline-block;
+  margin-top: 0.5em;
+  font-size: 0.9rem;
+  color: #cfe9dd;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(207, 233, 221, 0.35);
+}
+
+@media (hover: hover) {
+  .yg-realm__channel:hover {
+    color: #fff;
+    border-color: #fff;
+  }
+}
+
+.yg-realm__bio {
+  margin: 0 0 22px;
+  max-width: 46em;
+  color: #d9e8e1;
+}
+
+/* Videos ------------------------------------------------------------------ */
+
+.yg-videos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.yg-videos a {
+  display: block;
+  height: 100%;
+  padding-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(6, 20, 16, 0.55);
+  color: #eaf4ef;
+  text-decoration: none;
+  overflow: hidden;
+  transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+}
+
+.yg-videos img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin-bottom: 10px;
+  background: #0b1a16;
+}
+
+.yg-videos__note {
+  display: block;
+  padding: 0 12px;
+  margin-bottom: 4px;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--realm-tint, var(--yg-green));
+}
+
+.yg-videos__title {
+  display: block;
+  padding: 0 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+@media (hover: hover) {
+  .yg-videos a:hover {
+    border-color: var(--realm-tint, var(--yg-green));
+    background: rgba(12, 34, 27, 0.8);
+    transform: translateY(-3px);
+  }
+}
+
+.yg-videos a:focus-visible {
+  outline: 2px solid var(--realm-tint, var(--yg-green));
+  outline-offset: 2px;
+}
+
+/* Punkte, die zeigen, an welcher Wurzel man gerade ist. Erzeugt von
+   js/geschichte-tree-v1.js – nur wenn die Mechanik auch wirklich läuft. */
+.yg-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  z-index: 2;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+.yg-dots button {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.yg-dots button::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.yg-dots button.is-active::before {
+  background: var(--yg-green);
+  transform: scale(1.5);
+  box-shadow: 0 0 12px var(--yg-green);
+}
+
+.yg-dots button:focus-visible {
+  outline: 2px solid var(--yg-green);
+  outline-offset: 0;
+  border-radius: 50%;
+}
+
+/* ==========================================================================
+   Sprungmarken rechts (js/section-nav.js)
+   ========================================================================== */
+
+.secnav {
+  position: fixed;
+  right: calc(14px + env(safe-area-inset-right, 0px));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+}
+
+.secnav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.secnav__link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 9px 6px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.secnav__dash {
+  display: block;
+  width: 26px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(255, 180, 60, 0.4);
+  transition: width 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+}
+
+.secnav__label {
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  color: var(--color-orange-light);
+  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(12, 6, 2, 0.88);
+  border: 1px solid rgba(255, 140, 26, 0.4);
+  opacity: 0;
+  transform: translateX(8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.secnav__link.is-active .secnav__dash {
+  width: 44px;
+  background: var(--color-orange);
+  box-shadow: 0 0 12px rgba(255, 140, 26, 0.7);
+}
+
+@media (hover: hover) {
+  .secnav__link:hover .secnav__dash {
+    width: 44px;
+    background: var(--color-orange-light);
+  }
+  .secnav__link:hover .secnav__label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.secnav__link:focus-visible {
+  outline: 2px solid var(--color-orange-light);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.secnav__link:focus-visible .secnav__label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ==========================================================================
+   Einfache Fassung
+   Auf schmalen Schirmen, ohne JavaScript und bei reduzierter Bewegung steht
+   der Baum als Bild oben und die drei Reiche darunter – kein Kleben, kein
+   seitliches Wandern, nichts, was schiefgehen kann.
+   ========================================================================== */
+
+.yg-track--plain { height: auto; }
+
+.yg-track--plain .yg-stage {
+  position: static;
+  height: auto;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  padding: 8vh 0 6vh;
+}
+
+.yg-track--plain .yg-tree {
+  height: 46vh;
+  min-height: 300px;
+  padding: 0 20px;
+}
+
+.yg-track--plain .yg-viewport { overflow: visible; height: auto; }
+
+.yg-track--plain .yg-strip {
+  flex: 1 1 auto;
+  flex-direction: column;
+  transform: none !important;
+  gap: 44px;
+}
+
+.yg-track--plain .yg-realm {
+  flex: 0 0 auto;
+  max-height: none;
+  overflow: visible;
+  opacity: 1 !important;
+  padding: 0 clamp(18px, 5vw, 40px);
+}
+
+.yg-track--plain .yg-root {
+  stroke: var(--yg-green);
+  stroke-opacity: 0.8;
+}
+
+/* Ohne JavaScript gilt dasselbe: das Skript setzt --plain sonst selbst. */
+html:not(.js) .yg-track { height: auto; }
+
+html:not(.js) .yg-stage {
+  position: static;
+  height: auto;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  padding: 8vh 0 6vh;
+}
+
+html:not(.js) .yg-tree { height: 46vh; min-height: 300px; padding: 0 20px; }
+html:not(.js) .yg-viewport { overflow: visible; height: auto; }
+
+html:not(.js) .yg-strip {
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 44px;
+}
+
+html:not(.js) .yg-realm {
+  flex: 0 0 auto;
+  max-height: none;
+  overflow: visible;
+  padding: 0 clamp(18px, 5vw, 40px);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .yg-videos { grid-template-columns: 1fr 1fr; }
+  .yg-videos li:nth-child(3) { grid-column: 1 / -1; }
+}
+
+@media (max-width: 700px) {
+  .yg-hero { min-height: 74svh; padding: 15svh 18px 6vh; }
+  .yg-hero__title { font-size: clamp(2rem, 10vw, 3rem); }
+
+  .yg-quote { font-size: 1.04rem; padding: 15px 18px; }
+
+  .yg-videos { grid-template-columns: 1fr; }
+  .yg-videos li:nth-child(3) { grid-column: auto; }
+
+  .yg-realm__sigil,
+  .yg-realm__photo { width: 62px; height: 62px; }
+  .yg-realm__sigil { font-size: 1.6rem; }
+
+  /* Auf dem Handy nur die Striche, ohne Namen. */
+  .secnav { right: calc(6px + env(safe-area-inset-right, 0px)); }
+  .secnav__dash { width: 18px; }
+  .secnav__link.is-active .secnav__dash { width: 30px; }
+  .secnav__label { display: none; }
+  .secnav__link { padding: 8px 4px; }
+
+  .content-block::before,
+  .yg-section::before {
+    top: -10px;
+    height: 2px;
+    width: calc(var(--band-progress, 0) * 100%);
+  }
+  .yg-section::before { left: 0; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yg-root { transition: none; }
+  .yg-realm { transition: none; }
+  .yg-videos a { transition: none; }
+}
