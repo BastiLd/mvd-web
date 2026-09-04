@@ -166,37 +166,40 @@
                 </filter>
               </defs>
 
-              <!-- Kronenschein: zwei Wolken übereinander, violett über grün -->
-              <ellipse cx="230" cy="180" rx="215" ry="150" fill="url(#yg-crown)" filter="url(#yg-soft)"/>
-              <ellipse cx="230" cy="235" rx="150" ry="95" fill="url(#yg-crown-warm)" filter="url(#yg-soft)"/>
+              <!-- Kronenschein: zwei Wolken übereinander, violett über grün,
+                   darüber eine dritte in der Farbe des Reichs, bei dem man
+                   gerade steht. Die Farbe setzt js/geschichte-tree-v1.js. -->
+              <ellipse class="yg-tree__aura" cx="230" cy="215" rx="185" ry="135" filter="url(#yg-soft)"/>
+              <ellipse class="yg-tree__crown" cx="230" cy="180" rx="215" ry="150" fill="url(#yg-crown)" filter="url(#yg-soft)"/>
+              <ellipse class="yg-tree__crown" cx="230" cy="235" rx="150" ry="95" fill="url(#yg-crown-warm)" filter="url(#yg-soft)"/>
 
               <!-- Astwerk: erst weich hinterlegt, dann scharf darüber -->
-              <g fill="none" stroke-linecap="round" stroke="#d9b8ff" stroke-opacity="0.35" filter="url(#yg-haze)">
-                <path d="M230 380 C214 320 176 282 128 250" stroke-width="16"/>
-                <path d="M230 380 C246 320 286 280 336 248" stroke-width="16"/>
-                <path d="M230 372 C228 300 226 240 224 176" stroke-width="14"/>
+              <g class="yg-tree__haze" fill="none" stroke-linecap="round" stroke="#d9b8ff" stroke-opacity="0.35" filter="url(#yg-haze)">
+                <path pathLength="1" d="M230 380 C214 320 176 282 128 250" stroke-width="16"/>
+                <path pathLength="1" d="M230 380 C246 320 286 280 336 248" stroke-width="16"/>
+                <path pathLength="1" d="M230 372 C228 300 226 240 224 176" stroke-width="14"/>
               </g>
 
-              <g fill="none" stroke-linecap="round" stroke="#c9a6f5" stroke-opacity="0.75">
-                <path d="M230 384 C214 322 176 284 128 252" stroke-width="8"/>
-                <path d="M230 384 C246 322 286 282 336 250" stroke-width="8"/>
-                <path d="M230 376 C228 302 226 242 224 178" stroke-width="7"/>
+              <g class="yg-tree__branches" fill="none" stroke-linecap="round" stroke="#c9a6f5" stroke-opacity="0.75">
+                <path pathLength="1" d="M230 384 C214 322 176 284 128 252" stroke-width="8"/>
+                <path pathLength="1" d="M230 384 C246 322 286 282 336 250" stroke-width="8"/>
+                <path pathLength="1" d="M230 376 C228 302 226 242 224 178" stroke-width="7"/>
 
-                <path d="M172 296 C146 272 118 258 84 250" stroke-width="5"/>
-                <path d="M156 274 C142 244 134 220 132 190" stroke-width="4.5"/>
-                <path d="M288 292 C314 266 344 252 378 244" stroke-width="5"/>
-                <path d="M304 270 C318 240 326 216 328 188" stroke-width="4.5"/>
-                <path d="M226 250 C206 220 190 200 168 180" stroke-width="4"/>
-                <path d="M226 246 C248 218 266 198 288 178" stroke-width="4"/>
+                <path pathLength="1" d="M172 296 C146 272 118 258 84 250" stroke-width="5"/>
+                <path pathLength="1" d="M156 274 C142 244 134 220 132 190" stroke-width="4.5"/>
+                <path pathLength="1" d="M288 292 C314 266 344 252 378 244" stroke-width="5"/>
+                <path pathLength="1" d="M304 270 C318 240 326 216 328 188" stroke-width="4.5"/>
+                <path pathLength="1" d="M226 250 C206 220 190 200 168 180" stroke-width="4"/>
+                <path pathLength="1" d="M226 246 C248 218 266 198 288 178" stroke-width="4"/>
 
-                <path d="M120 250 C104 232 96 216 92 196" stroke-width="3"/>
-                <path d="M380 244 C396 226 404 210 408 190" stroke-width="3"/>
-                <path d="M224 178 C216 156 212 140 212 122" stroke-width="3"/>
-                <path d="M226 178 C238 158 248 144 260 130" stroke-width="3"/>
+                <path pathLength="1" d="M120 250 C104 232 96 216 92 196" stroke-width="3"/>
+                <path pathLength="1" d="M380 244 C396 226 404 210 408 190" stroke-width="3"/>
+                <path pathLength="1" d="M224 178 C216 156 212 140 212 122" stroke-width="3"/>
+                <path pathLength="1" d="M226 178 C238 158 248 144 260 130" stroke-width="3"/>
               </g>
 
               <!-- Blüten in der Krone -->
-              <g fill="#f4d2ff" fill-opacity="0.55" filter="url(#yg-glow)">
+              <g class="yg-tree__blooms" fill="#f4d2ff" fill-opacity="0.55" filter="url(#yg-glow)">
                 <circle cx="132" cy="188" r="5"/>
                 <circle cx="92" cy="196" r="4"/>
                 <circle cx="168" cy="180" r="4.5"/>
@@ -209,41 +212,53 @@
                 <circle cx="272" cy="222" r="3.5"/>
               </g>
 
-              <!-- Stamm, unten zum Wurzelfuß verbreitert -->
-              <path d="M206 372 C202 430 198 480 190 520 C176 556 150 572 118 582
-                       L342 582 C310 572 284 556 270 520 C262 480 258 430 254 372
-                       C244 356 216 356 206 372 Z"
-                    fill="url(#yg-trunk)" filter="url(#yg-glow)"/>
+              <!-- Stamm, Rinde und Lichtkern zusammen: die Gruppe wird beim
+                   Scrollen von unten hochgezogen, deshalb muss alles, was zum
+                   Stamm gehört, in derselben Gruppe liegen. -->
+              <g class="yg-tree__stem">
+                <path d="M206 372 C202 430 198 480 190 520 C176 556 150 572 118 582
+                         L342 582 C310 572 284 556 270 520 C262 480 258 430 254 372
+                         C244 356 216 356 206 372 Z"
+                      fill="url(#yg-trunk)" filter="url(#yg-glow)"/>
 
-              <!-- Rindenstruktur -->
-              <g fill="none" stroke-linecap="round">
-                <path d="M222 386 C218 452 214 502 202 546" stroke="#eafff3" stroke-opacity="0.4" stroke-width="3.5"/>
-                <path d="M240 388 C240 452 242 502 250 546" stroke="#0d5a3c" stroke-opacity="0.32" stroke-width="4"/>
-                <path d="M230 400 C228 460 228 510 230 556" stroke="#0d5a3c" stroke-opacity="0.22" stroke-width="2.5"/>
+                <g fill="none" stroke-linecap="round">
+                  <path d="M222 386 C218 452 214 502 202 546" stroke="#eafff3" stroke-opacity="0.4" stroke-width="3.5"/>
+                  <path d="M240 388 C240 452 242 502 250 546" stroke="#0d5a3c" stroke-opacity="0.32" stroke-width="4"/>
+                  <path d="M230 400 C228 460 228 510 230 556" stroke="#0d5a3c" stroke-opacity="0.22" stroke-width="2.5"/>
+                </g>
               </g>
 
               <!-- Lichtkern am Fuß -->
-              <ellipse cx="230" cy="586" rx="165" ry="62" fill="url(#yg-core)"/>
+              <ellipse class="yg-tree__core" cx="230" cy="586" rx="165" ry="62" fill="url(#yg-core)"/>
 
               <!-- Die drei Wurzeln. Jede gehört zu einem Reich und wird von
                    js/geschichte-tree-v1.js hell geschaltet, sobald man dort ist. -->
               <g class="yg-roots" fill="none" stroke-linecap="round">
-                <path class="yg-root" data-root="mittelkap"
+                <path class="yg-root" data-root="mittelkap" pathLength="1"
                       d="M262 578 C296 588 322 600 356 604 C398 608 430 606 460 600" stroke-width="10"/>
-                <path class="yg-root" data-root="basti"
+                <path class="yg-root" data-root="basti" pathLength="1"
                       d="M252 584 C284 616 316 646 358 664 C400 682 432 688 460 690" stroke-width="10"/>
-                <path class="yg-root" data-root="montrigor"
+                <path class="yg-root" data-root="montrigor" pathLength="1"
                       d="M240 588 C252 640 278 700 322 730 C372 762 424 760 460 754" stroke-width="10"/>
+
+                <!-- Darüber je ein gestrichelter Pfad: die Striche wandern von
+                     außen zum Stamm und lassen die Wurzel etwas liefern. -->
+                <path class="yg-root__flow" data-root="mittelkap" pathLength="1"
+                      d="M262 578 C296 588 322 600 356 604 C398 608 430 606 460 600" stroke-width="5"/>
+                <path class="yg-root__flow" data-root="basti" pathLength="1"
+                      d="M252 584 C284 616 316 646 358 664 C400 682 432 688 460 690" stroke-width="5"/>
+                <path class="yg-root__flow" data-root="montrigor" pathLength="1"
+                      d="M240 588 C252 640 278 700 322 730 C372 762 424 760 460 754" stroke-width="5"/>
               </g>
 
               <!-- Feine Nebenwurzeln, nur Textur -->
-              <g fill="none" stroke="#1f8f63" stroke-opacity="0.32" stroke-linecap="round" stroke-width="3.5">
-                <path d="M196 580 C160 596 126 606 84 608"/>
-                <path d="M186 576 C144 578 106 570 66 556"/>
-                <path d="M206 588 C178 634 148 668 108 694"/>
-                <path d="M222 592 C216 646 206 692 190 736"/>
-                <path d="M356 604 C374 626 380 646 380 668"/>
-                <path d="M322 730 C336 742 352 748 370 750"/>
+              <g class="yg-tree__rootlets" fill="none" stroke="#1f8f63" stroke-opacity="0.32" stroke-linecap="round" stroke-width="3.5">
+                <path pathLength="1" d="M196 580 C160 596 126 606 84 608"/>
+                <path pathLength="1" d="M186 576 C144 578 106 570 66 556"/>
+                <path pathLength="1" d="M206 588 C178 634 148 668 108 694"/>
+                <path pathLength="1" d="M222 592 C216 646 206 692 190 736"/>
+                <path pathLength="1" d="M356 604 C374 626 380 646 380 668"/>
+                <path pathLength="1" d="M322 730 C336 742 352 748 370 750"/>
               </g>
             </svg>
           </div>
@@ -253,7 +268,22 @@
 
               <article class="yg-realm" data-root="mittelkap" style="--realm-tint: #7ce8a4;">
                 <div class="yg-realm__head">
-                  <span class="yg-realm__sigil" aria-hidden="true">M</span>
+                  <span class="yg-sigil">
+                    <span class="yg-sigil__halo" aria-hidden="true"></span>
+                    <svg class="yg-sigil__ring" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+                      <circle class="yg-sigil__base" cx="50" cy="50" r="45"/>
+                      <circle class="yg-sigil__arc" cx="50" cy="50" r="45"/>
+                      <g class="yg-sigil__ticks">
+                        <line x1="50" y1="2" x2="50" y2="10"/>
+                        <line x1="98" y1="50" x2="90" y2="50"/>
+                        <line x1="50" y1="98" x2="50" y2="90"/>
+                        <line x1="2" y1="50" x2="10" y2="50"/>
+                      </g>
+                      <circle class="yg-sigil__spark" cx="50" cy="5" r="2.6"/>
+                    </svg>
+                    <span class="yg-sigil__sweep" aria-hidden="true"></span>
+                    <span class="yg-sigil__glyph" aria-hidden="true">M</span>
+                  </span>
                   <div>
                     <h3 class="yg-realm__name">MittelKap7</h3>
                     <p class="yg-realm__role">CEO &amp; Gründer</p>
@@ -289,7 +319,22 @@
 
               <article class="yg-realm" data-root="basti" style="--realm-tint: #8fb6ff;">
                 <div class="yg-realm__head">
-                  <span class="yg-realm__sigil" aria-hidden="true">B</span>
+                  <span class="yg-sigil">
+                    <span class="yg-sigil__halo" aria-hidden="true"></span>
+                    <svg class="yg-sigil__ring" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+                      <circle class="yg-sigil__base" cx="50" cy="50" r="45"/>
+                      <circle class="yg-sigil__arc" cx="50" cy="50" r="45"/>
+                      <g class="yg-sigil__ticks">
+                        <line x1="50" y1="2" x2="50" y2="10"/>
+                        <line x1="98" y1="50" x2="90" y2="50"/>
+                        <line x1="50" y1="98" x2="50" y2="90"/>
+                        <line x1="2" y1="50" x2="10" y2="50"/>
+                      </g>
+                      <circle class="yg-sigil__spark" cx="50" cy="5" r="2.6"/>
+                    </svg>
+                    <span class="yg-sigil__sweep" aria-hidden="true"></span>
+                    <span class="yg-sigil__glyph" aria-hidden="true">B</span>
+                  </span>
                   <div>
                     <h3 class="yg-realm__name">Basti</h3>
                     <p class="yg-realm__role">COO · CFO · CTO · CRO</p>
@@ -325,7 +370,22 @@
 
               <article class="yg-realm" data-root="montrigor" style="--realm-tint: #e0a3ff;">
                 <div class="yg-realm__head">
-                  <img class="yg-realm__photo" src="assets/images/montrigor-avatar.jpg" alt="Kanalbild von Montrigor" loading="lazy" width="400" height="400">
+                  <span class="yg-sigil yg-sigil--photo">
+                    <span class="yg-sigil__halo" aria-hidden="true"></span>
+                    <svg class="yg-sigil__ring" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+                      <circle class="yg-sigil__base" cx="50" cy="50" r="45"/>
+                      <circle class="yg-sigil__arc" cx="50" cy="50" r="45"/>
+                      <g class="yg-sigil__ticks">
+                        <line x1="50" y1="2" x2="50" y2="10"/>
+                        <line x1="98" y1="50" x2="90" y2="50"/>
+                        <line x1="50" y1="98" x2="50" y2="90"/>
+                        <line x1="2" y1="50" x2="10" y2="50"/>
+                      </g>
+                      <circle class="yg-sigil__spark" cx="50" cy="5" r="2.6"/>
+                    </svg>
+                    <span class="yg-sigil__sweep" aria-hidden="true"></span>
+                    <img class="yg-sigil__photo" src="assets/images/montrigor-avatar.jpg" alt="Kanalbild von Montrigor" loading="lazy" width="400" height="400">
+                  </span>
                   <div>
                     <h3 class="yg-realm__name">Montrigor</h3>
                     <p class="yg-realm__role">Der Funke</p>

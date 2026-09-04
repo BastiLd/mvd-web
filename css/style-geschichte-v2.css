@@ -291,13 +291,16 @@
   will-change: transform;
 }
 
+/* Die Nachbarn treten zurück, statt zu verschwinden. Der Wert kommt aus
+   --near, läuft also stufenlos mit dem Scrollen mit – deshalb braucht es
+   hier auch keine transition mehr. */
 .yg3-realm {
   flex: 0 0 33.3333%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   padding: 0 clamp(16px, 5vw, 40px);
-  transition: opacity 0.4s ease;
+  opacity: calc(0.32 + 0.68 * var(--near, 1));
 }
 
 /* Die Karte steht rechts, damit der Baum links im Bild frei bleibt. */
@@ -321,26 +324,179 @@
   margin-bottom: 16px;
 }
 
-.yg3-realm__sigil {
+/* ==========================================================================
+   Das Emblem – M, B und M
+
+   Gebaut wird es aus fünf Schichten, die alle an einer einzigen Zahl hängen:
+   --near. Die setzt js/geschichte-tree-v2.js pro Reich und sagt, wie weit
+   dieses Reich in der Mitte steht: 0 = ganz draußen, 1 = genau mittig.
+   Weil das eine Zahl und keine Zustandsklasse ist, läuft die Bewegung
+   direkt am Scrollen mit und ebenso rückwärts, wenn man zurückscrollt.
+
+   Ohne JavaScript und in der einfachen Fassung steht --near auf 1, dann ist
+   das Emblem einfach fertig gezeichnet da.
+   ========================================================================== */
+
+.yg3-sigil {
+  /* --near wird am Reich gesetzt und hierher vererbt. Es darf hier nicht neu
+     deklariert werden, sonst überdeckt der lokale Wert den geerbten. Der
+     Rückfallwert steht deshalb in jedem var()-Aufruf: ohne JavaScript ist
+     das Emblem fertig gezeichnet. */
+  --tint: var(--realm-tint, #4ade80);
+
+  position: relative;
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  width: 72px;
-  height: 72px;
-  border: 2px solid var(--realm-tint, #4ade80);
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--realm-tint, #4ade80);
-  font-family: var(--font-comic);
-  font-size: 2.2rem;
-  line-height: 1;
+  width: 84px;
+  height: 84px;
+  isolation: isolate;
 }
 
-.yg3-realm__photo {
-  flex: 0 0 auto;
-  width: 72px;
-  height: 72px;
+/* 1. Der Schein dahinter. Wächst und leuchtet mit --near auf. */
+.yg3-sigil__halo {
+  position: absolute;
+  inset: -18%;
+  z-index: 0;
+  border-radius: 50%;
+  /* Erst eine Fassung ohne color-mix als Rückfall - Browser, die
+     color-mix nicht kennen, verwerfen nur die zweite Angabe. */
+  background: radial-gradient(circle, var(--tint) 0%, transparent 70%);
+  background: radial-gradient(circle,
+      color-mix(in srgb, var(--tint) 55%, transparent) 0%,
+      color-mix(in srgb, var(--tint) 16%, transparent) 42%,
+      transparent 70%);
+  opacity: calc(var(--near, 1) * 0.9);
+  transform: scale(calc(0.6 + 0.4 * var(--near, 1)));
+}
+
+/* 2. Der Ring. Zwei Kreise übereinander: einer als blasse Spur, einer als
+      Bogen, der sich mit --near zuzieht. 283 ist der Umfang bei r = 45. */
+.yg3-sigil__ring {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  transform: rotate(-90deg);
+}
+
+.yg3-sigil__base {
+  stroke: var(--tint);
+  stroke: color-mix(in srgb, var(--tint) 30%, transparent);
+  stroke-width: 1.6;
+}
+
+.yg3-sigil__arc {
+  stroke: var(--tint);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 283px;
+  stroke-dashoffset: calc(283px * (1 - var(--near, 1)));
+  filter: drop-shadow(0 0 6px var(--tint));
+}
+
+/* 3. Vier Marken an den Achsen, die sich beim Ankommen nach außen schieben. */
+.yg3-sigil__ticks {
+  transform-origin: 50px 50px;
+  transform: scale(calc(0.82 + 0.18 * var(--near, 1)));
+}
+
+.yg3-sigil__ticks line {
+  stroke: var(--tint);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  opacity: calc(var(--near, 1) * 0.85);
+}
+
+/* 4. Ein Funke, der auf dem Ring mitläuft, sobald das Reich vorn steht. */
+.yg3-sigil__spark {
+  fill: #fff;
+  opacity: 0;
+  transform-origin: 50px 50px;
+  filter: drop-shadow(0 0 5px var(--tint));
+}
+
+.yg3-realm.is-active .yg3-sigil__spark {
+  opacity: 1;
+  animation: yg3-spark 3.4s linear infinite;
+}
+
+@keyframes yg3-spark {
+  to { transform: rotate(360deg); }
+}
+
+/* 5. Ein Lichtstreifen, der einmal quer läuft, wenn das Reich ankommt. */
+.yg3-sigil__sweep {
+  position: absolute;
+  inset: 4%;
+  z-index: 3;
+  border-radius: 50%;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.yg3-sigil__sweep::before {
+  content: "";
+  position: absolute;
+  top: -60%;
+  left: -120%;
+  width: 60%;
+  height: 220%;
+  background: linear-gradient(100deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.75) 50%,
+      transparent 100%);
+  transform: rotate(18deg);
+}
+
+.yg3-realm.is-active .yg3-sigil__sweep {
+  opacity: 1;
+  animation: yg3-sweep 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
+}
+
+@keyframes yg3-sweep {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.yg3-realm.is-active .yg3-sigil__sweep::before {
+  animation: yg3-sweep-move 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
+}
+
+@keyframes yg3-sweep-move {
+  to { left: 160%; }
+}
+
+/* 6. Der Buchstabe. Steigt auf, wächst und wird hell – alles an --near. */
+.yg3-sigil__glyph {
+  position: relative;
+  z-index: 2;
+  color: var(--tint);
+  font-family: var(--font-comic);
+  font-size: 2.3rem;
+  line-height: 1;
+  opacity: calc(0.25 + 0.75 * var(--near, 1));
+  transform:
+    translateY(calc((1 - var(--near, 1)) * 10px))
+    scale(calc(0.78 + 0.22 * var(--near, 1)));
+  text-shadow: 0 0 calc(var(--near, 1) * 18px) var(--tint);
+}
+
+/* Das Kanalbild sitzt an derselben Stelle wie ein Buchstabe. */
+.yg3-sigil__photo {
+  position: relative;
+  z-index: 2;
+  width: 64%;
+  height: 64%;
+  border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--realm-tint, #4ade80);
+  opacity: calc(0.45 + 0.55 * var(--near, 1));
+  transform: scale(calc(0.8 + 0.2 * var(--near, 1)));
+  box-shadow: 0 0 calc(var(--near, 1) * 20px) -2px var(--tint);
 }
 
 .yg3-realm__name {
@@ -681,13 +837,21 @@ html:not(.js) .yg3-realm__card {
   .yg3-videos { grid-template-columns: 1fr; }
   .yg3-videos li:nth-child(3) { grid-column: auto; }
 
-  .yg3-realm__sigil,
-  .yg3-realm__photo { width: 60px; height: 60px; }
-  .yg3-realm__sigil { font-size: 1.8rem; }
+  .yg3-sigil { width: 66px; height: 66px; }
+  .yg3-sigil__glyph { font-size: 1.8rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .yg3-realm { transition: none; }
   .yg3-videos a { transition: none; }
   .hero__jump a { transition: none; }
+
+  /* Das Emblem steht dann einfach fertig da – kein Ring, der sich zuzieht,
+     kein Funke, der kreist, kein Lichtstreifen. */
+  .yg3-realm { --near: 1; }
+  .yg3-sigil__spark,
+  .yg3-sigil__sweep { display: none; }
+  .yg3-sigil__halo,
+  .yg3-sigil__glyph,
+  .yg3-sigil__photo { transform: none; }
 }

@@ -30,6 +30,8 @@
 
   var realms = Array.prototype.slice.call(strip.querySelectorAll(".yg-realm"));
   var roots = Array.prototype.slice.call(document.querySelectorAll(".yg-root"));
+  var flows = Array.prototype.slice.call(document.querySelectorAll(".yg-root__flow"));
+  var treeSvg = document.querySelector(".yg-tree svg");
   if (!realms.length) { return; }
 
   var reduceQuery = window.matchMedia
@@ -50,22 +52,67 @@
     return realm.style.getPropertyValue("--realm-tint").trim() || "";
   }
 
+  /* Wie weit steht Reich i in der Mitte? 1 = genau mittig, 0 = ein volles
+     Feld daneben. Diese Zahl geht als --near ins CSS und treibt dort das
+     ganze Emblem. Sie ist bewusst stufenlos, damit die Bewegung am Scrollen
+     hängt statt an einem Umschaltpunkt. */
+  function nearness(position, index) {
+    var d = Math.abs(position - index);
+    return d >= 1 ? 0 : 1 - d;
+  }
+
+  /* Weich in der Mitte, weich an den Rändern. */
+  function smooth(t) {
+    return t * t * (3 - 2 * t);
+  }
+
+  function setNear(position) {
+    realms.forEach(function (realm, i) {
+      realm.style.setProperty("--near", smooth(nearness(position, i)).toFixed(3));
+    });
+  }
+
+  /* Der Baum wächst, während die Bühne ankommt – und zwar in der Reihenfolge,
+     in der ein Baum wächst: erst der Stamm, dann die Wurzeln, dann das
+     Astwerk, zuletzt Krone und Blüten. Vier getrennte Werte statt einem,
+     weil sich die Abschnitte überlappen sollen; mit einem einzigen Wert
+     bliebe zwischen Stammspitze und Astansatz eine Lücke stehen.
+
+     Bei 0.12 ist alles fertig – dort steht das erste Reich in der Mitte. */
+  function stage(progress, from, to) {
+    return smooth(Math.min(Math.max((progress - from) / (to - from), 0), 1));
+  }
+
+  function setGrow(progress) {
+    if (!treeSvg) { return; }
+    treeSvg.style.setProperty("--grow-stem", stage(progress, 0, 0.05).toFixed(3));
+    treeSvg.style.setProperty("--grow-root", stage(progress, 0.03, 0.085).toFixed(3));
+    treeSvg.style.setProperty("--grow-branch", stage(progress, 0.04, 0.1).toFixed(3));
+    treeSvg.style.setProperty("--grow-bloom", stage(progress, 0.07, 0.13).toFixed(3));
+  }
+
+  function markRoots(index) {
+    var want = realms[index] ? realms[index].getAttribute("data-root") : null;
+    var tint = realms[index] ? tintOf(realms[index]) : "";
+
+    roots.concat(flows).forEach(function (node) {
+      var match = want && node.getAttribute("data-root") === want;
+      node.classList.toggle("is-active", !!match);
+      if (match) { node.style.setProperty("--root-tint", tint); }
+    });
+
+    if (treeSvg && tint) { treeSvg.style.setProperty("--aura", tint); }
+  }
+
   function setActive(index) {
     if (index === current) { return; }
     current = index;
 
     realms.forEach(function (realm, i) {
-      /* Die Nachbarn bleiben sichtbar, treten aber zurück. */
-      realm.style.opacity = i === index ? "1" : "0.35";
+      realm.classList.toggle("is-active", i === index);
     });
 
-    roots.forEach(function (root) {
-      var match = realms[index] && root.getAttribute("data-root") === realms[index].getAttribute("data-root");
-      root.classList.toggle("is-active", !!match);
-      if (match) {
-        root.style.setProperty("--root-tint", tintOf(realms[index]));
-      }
-    });
+    markRoots(index);
 
     if (dots) {
       Array.prototype.forEach.call(dots.children, function (button, i) {
@@ -85,13 +132,16 @@
 
     /* 0 = Bühne gerade angekommen, 1 = Track komplett durchgescrollt. */
     var progress = Math.min(Math.max(-rect.top / scrollable, 0), 1);
+    setGrow(progress);
 
     /* Der erste Bildschirm dient dem Ankommen, danach wird gewandert. */
     var eased = Math.min(Math.max((progress - 0.12) / 0.76, 0), 1);
     var span = realms.length - 1;
+    var position = eased * span;
 
     strip.style.transform = "translateX(" + (-eased * span * (100 / realms.length)) + "%)";
-    setActive(Math.min(Math.round(eased * span), span));
+    setNear(position);
+    setActive(Math.min(Math.round(position), span));
   }
 
   function onScroll() {
@@ -148,8 +198,21 @@
     plain = true;
     track.classList.add("yg-track--plain");
     strip.style.transform = "";
-    realms.forEach(function (realm) { realm.style.opacity = ""; });
-    roots.forEach(function (root) { root.classList.remove("is-active"); });
+
+    /* Untereinander steht kein Reich weiter vorn als ein anderes: alle
+       Embleme fertig, keine hervorgehobene Wurzel, Baum fertig gewachsen. */
+    realms.forEach(function (realm) {
+      realm.style.opacity = "";
+      realm.style.setProperty("--near", "1");
+      realm.classList.remove("is-active");
+    });
+    roots.concat(flows).forEach(function (node) { node.classList.remove("is-active"); });
+    if (treeSvg) {
+      ["--grow-stem", "--grow-root", "--grow-branch", "--grow-bloom"].forEach(function (name) {
+        treeSvg.style.setProperty(name, "1");
+      });
+    }
+
     if (dots) {
       dots.remove();
       dots = null;
