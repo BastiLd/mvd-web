@@ -222,10 +222,18 @@
    Bereiche – jeder Hauptpunkt bekommt ein eigenes, volles Seitenband
    ========================================================================== */
 
+/* overflow: clip statt hidden. Beides schneidet gleich ab – und abgeschnitten
+   werden muss, weil .band__mark und die Deko-Symbole absichtlich über den
+   Rand hinausragen. hidden macht das Band aber zusätzlich zum
+   Scroll-Container, und in einem Scroll-Container klebt position: sticky am
+   Band statt am Bildschirm: die Bühne des Baums und die Frageüberschriften
+   wandern dann einfach mit weg. clip hat diese Nebenwirkung nicht.
+   Die hidden-Zeile davor bleibt als Rückfall für Browser ohne clip. */
 .band {
   position: relative;
   padding: clamp(48px, 6.5vw, 82px) clamp(16px, 5vw, 40px);
   overflow: hidden;
+  overflow: clip;
   scroll-margin-top: var(--topbar-h);
 }
 

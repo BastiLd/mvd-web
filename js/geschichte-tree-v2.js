@@ -95,6 +95,9 @@
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) { return; }
     queued = false;
+    /* decide() ist absichtlich dabei: war beim Laden noch keine Breite
+       messbar, wird die Entscheidung hier nachgeholt. */
+    decide();
     onScroll();
   });
 
@@ -129,6 +132,11 @@
   }
 
   function decide() {
+    /* Ohne gemessene Breite – etwa in einem noch nicht dargestellten Tab –
+       wäre innerWidth 0 und die Seite bliebe dauerhaft in der einfachen
+       Fassung hängen. In dem Fall wird schlicht noch nicht entschieden. */
+    if (!window.innerWidth) { return; }
+
     var wantsPlain = window.innerWidth < PAN_BELOW || !!(reduceQuery && reduceQuery.matches);
 
     if (wantsPlain === plain) {

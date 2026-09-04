@@ -56,10 +56,18 @@
    Bänder
    ========================================================================== */
 
+/* overflow: clip statt hidden. Beides schneidet gleich ab – und abgeschnitten
+   werden muss, weil .band__mark und die Deko-Symbole absichtlich über den
+   Rand hinausragen. hidden macht das Band aber zusätzlich zum
+   Scroll-Container, und in einem Scroll-Container klebt position: sticky am
+   Band statt am Bildschirm: die Bühne des Baums und die Frageüberschriften
+   wandern dann einfach mit weg. clip hat diese Nebenwirkung nicht.
+   Die hidden-Zeile davor bleibt als Rückfall für Browser ohne clip. */
 .band {
   position: relative;
   padding: clamp(48px, 6.5vw, 82px) clamp(16px, 5vw, 40px);
   overflow: hidden;
+  overflow: clip;
   scroll-margin-top: var(--topbar-h);
 }
 
@@ -72,7 +80,9 @@
   background-size: 11px 11px;
 }
 
-/* Das Baum-Band trägt seinen Inhalt selbst über die volle Breite. */
+/* Das Baum-Band trägt seinen Inhalt selbst über die volle Breite. Das
+   overflow steht bei .band – hier darf nichts stehen, was daraus wieder
+   einen Scroll-Container macht, sonst klebt .yg3-stage nicht mehr. */
 .band--tree {
   padding-left: 0;
   padding-right: 0;
@@ -568,13 +578,33 @@
 
 .yg3-track--plain { height: auto; }
 
+/* display: block, weil die drei Reiche hier untereinander stehen – zentriert
+   wird nichts mehr. overflow: visible/clip statt hidden, damit das Bild
+   darin kleben kann; hidden würde die Bühne zum Scroll-Container machen. */
 .yg3-track--plain .yg3-stage {
-  position: static;
+  position: relative;
+  display: block;
   height: auto;
   padding: 6vh 0 8vh;
+  overflow: visible;
+  overflow: clip;
 }
 
-.yg3-track--plain .yg3-canvas { position: fixed; }
+/* Das 3D-Bild bleibt als ruhiger Hintergrund stehen, während man an den
+   Reichen vorbeiscrollt. position: fixed wäre der naheliegende Weg, löst das
+   Bild aber aus dem Band heraus: es läge dann über der ganzen Seite, auch
+   über den hellen Abschnitten weiter oben. sticky hält es im Band. Der
+   negative Außenabstand nimmt ihm den Platz im Fluss wieder weg, den es als
+   normales Element sonst beanspruchen würde. */
+.yg3-track--plain .yg3-canvas {
+  position: sticky;
+  inset: auto;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  margin-bottom: -100vh;
+  margin-bottom: -100svh;
+}
 
 .yg3-track--plain .yg3-viewport { height: auto; overflow: visible; }
 
