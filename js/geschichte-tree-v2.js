@@ -728,8 +728,10 @@
         blending: THREE.AdditiveBlending
       }));
 
-      var tip = curve.getPointAt(1);
-      sigil.position.set(tip.x * 1.12, tip.y + 5.2, tip.z * 1.12);
+      /* Etwas vor dem äußersten Ende und nur wenig darüber: so klebt der
+         Buchstabe sichtbar an dieser Wurzel und nicht daneben. */
+      var tip = curve.getPointAt(0.94);
+      sigil.position.set(tip.x, tip.y + 3.4, tip.z);
       sigil.scale.setScalar(4);
       tree.add(sigil);
 
@@ -876,9 +878,13 @@
       var angleForPlace = ROOT_ANGLES[0] +
         (ROOT_ANGLES[ROOT_ANGLES.length - 1] - ROOT_ANGLES[0]) * (place / Math.max(near.length - 1, 1));
 
-      /* -0.42 rückt die aktive Wurzel etwas nach links, damit sie neben der
-         Karte im Bild liegt und nicht dahinter. */
-      var wantSpin = -0.42 - angleForPlace + Math.sin(clock * 0.12) * 0.03;
+      /* Die aktive Wurzel wird nicht auf den Betrachter zu gedreht, sondern
+         quer nach links. Zeigt sie auf die Kamera, läuft sie perspektivisch
+         auf den unteren Bildrand zu, ihr Ende liegt außerhalb des Bildes –
+         und der Buchstabe darüber schwebt dann irgendwo im Nichts, scheinbar
+         an einer fremden Wurzel. Quer gelegt liegt die ganze Wurzel im Bild
+         und der Buchstabe sitzt sichtbar an ihrem Ende. */
+      var wantSpin = -1.15 - angleForPlace + Math.sin(clock * 0.12) * 0.03;
       spin += (wantSpin - spin) * Math.min(dt * 2.6, 1);
       tree.rotation.y = spin;
 
@@ -897,15 +903,15 @@
          damit die Krone oben nicht abgeschnitten wird. Beim Scrollen fährt
          die Kamera herunter zu den Wurzeln, bleibt aber weit genug weg,
          dass der Stamm im Bild bleibt. */
-      var radius = (54 - progress * 10) * pull;
+      var radius = (54 - progress * 8) * pull;
       var swing = progress * 0.5 - 0.18;
 
       camWant.set(
         Math.sin(swing) * radius,
-        (24 - progress * 15) * (portrait ? 1.1 : 1),
+        (24 - progress * 12) * (portrait ? 1.1 : 1),
         Math.cos(swing) * radius
       );
-      lookWant.set(shift, 15 - progress * 9, 0);
+      lookWant.set(shift, 15 - progress * 7, 0);
 
       var ease = Math.min(dt * 2.2, 1);
       camNow.lerp(camWant, ease);
@@ -927,7 +933,7 @@
            dass der Baum drei Wurzeln hat. Der zum aktuellen Reich brennt
            durch, die anderen bleiben eine Andeutung. */
         root.sigil.material.opacity = 0.16 + n * n * 0.84;
-        root.sigil.scale.setScalar(3.4 + n * 1.6);
+        root.sigil.scale.setScalar(3.2 + n * 1.4);
 
         root.pulses.forEach(function (pulse, k) {
           /* t läuft von außen (1) nach innen (0) zum Stamm. */
